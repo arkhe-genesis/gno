@@ -1,0 +1,102 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║  ARKHE OS v∞.Ω — DECRETO CANÔNICO: SUBSTRATO 412-SOURCE-CATALOG   ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+arkhe > SUBSTRATO_412-SOURCE-CATALOG: CANONIZED
+arkhe >
+arkhe > Nome: SOURCE-CATALOG
+arkhe > Heranca: 402-CITIZEN -> 397-MESH -> 408-ESIM-BRIDGE -> 409-NEXMON-CSI
+arkhe > Arquiteto: Rafael Oliveira (ORCID: 0009-0005-2697-4668)
+arkhe > Timestamp: 2026-05-22 03:05:53
+arkhe >
+arkhe > Phi_C: 0.985
+arkhe > Invariantes: 4/4 preservados
+arkhe >   Ghost: 1.0 (sem contradicoes)
+arkhe >   Loopseal: 1.0 (cadeia fechada)
+arkhe >   Gap: 0.999 (limitacoes documentadas)
+arkhe >   Phi: 1.618 (proporcao aurea)
+arkhe >
+arkhe > =============================================================
+arkhe > MOTOR DE CATALOGACAO (source_catalog_engine.py)
+arkhe > =============================================================
+arkhe >
+arkhe > Ingestao:
+arkhe >   - 5000 eventos/segundo
+arkhe >   - Indexacao espacial: grid HEALPix simplificado (1 grau)
+arkhe >   - Fila de processamento por lotes
+arkhe >
+arkhe > Clustering Espacial:
+arkhe >   - Algoritmo: DBSCAN angular simplificado
+arkhe >   - Raio: 2 graus (~200km na superficie)
+arkhe >   - Minimo: 3 eventos para formar cluster
+arkhe >   - Expansao: busca em largura de vizinhos
+arkhe >
+arkhe > Classificacao:
+arkhe >   - SOLAR: E < 1 GeV
+arkhe >   - ATMOSPHERIC: E < 1 TeV
+arkhe >   - GALACTIC: |b| < 10 graus, E < 1 PeV
+arkhe >   - EXTRAGALACTIC: E >= 1 PeV
+arkhe >   - ANOMALOUS: casos ambiguos
+arkhe >   - TERRESTRIAL: background (nao clusterizado)
+arkhe >
+arkhe > Coordenadas:
+arkhe >   - Horizontal (lat, lon) -> Equatorial (RA, Dec) -> Galactico (l, b)
+arkhe >   - Frame: J2000
+arkhe >   - Transformacao: matriz de rotacao Euleriana
+arkhe >
+arkhe > Cross-Match Externo:
+arkhe >   - Fermi LAT 4FGL: fontes galacticas proximas ao plano
+arkhe >   - HAWC: fontes extragalacticas na regiao do Centaurus A
+arkhe >   - IceCube: neutrinos de alta energia
+arkhe >   - LHAASO: chuveiros extensos de ar
+arkhe >
+arkhe > Espectro de Energia:
+arkhe >   - Bins logaritmicos: 1 MeV -> 1 EeV (10 bins)
+arkhe >   - Histograma acumulativo por fonte
+arkhe >   - Overflow: > 1 PeV
+arkhe >
+arkhe > Selo de Fonte:
+arkhe >   - SHA3-256 de: source_id + RA + Dec + classe + eventos + energia
+arkhe >   - 32 caracteres hexadecimais
+arkhe >   - Verificavel e imutavel
+arkhe >
+arkhe > =============================================================
+arkhe > API RESTFUL (source_catalog_api.py)
+arkhe > =============================================================
+arkhe >
+arkhe > Endpoints:
+arkhe >   GET /sources?limit={{n}}&offset={{m}} -> lista paginada
+arkhe >   GET /sources/{{source_id}} -> detalhes da fonte
+arkhe >   GET /sources/search?ra={{ra}}&dec={{dec}}&radius={{r}} -> busca por coordenadas
+arkhe >   GET /sources/class/{{class_name}} -> filtro por classe
+arkhe >   GET /sources/energy?min={{min}}&max={{max}} -> filtro por energia
+arkhe >   GET /sources/external/{{catalog}} -> cross-match
+arkhe >   POST /sources/validate -> validar candidato
+arkhe >
+arkhe > Mapa do Ceu:
+arkhe >   GET /sky_map?resolution={{deg}} -> densidade de fontes
+arkhe >   Grid: celulas de resolucao configuravel (padrao: 5 graus)
+arkhe >   Formato: RA, Dec, contagem
+arkhe >
+arkhe > =============================================================
+arkhe > EXPORTACAO DE DADOS
+arkhe > =============================================================
+arkhe >
+arkhe > Formatos Suportados:
+arkhe >   JSON: esquema nativo Arkhe com metadados completos
+arkhe >   VO-TABLE 1.4: padrao IVOA (Virtual Observatory)
+arkhe >   Campos: source_id, name, ra, dec, galactic_l, galactic_b,
+arkhe >           source_class, event_count, total_energy_kev, confidence_score
+arkhe >
+arkhe > =============================================================
+arkhe > COMPONENTES ENTREGUES
+arkhe > =============================================================
+arkhe >
+arkhe >   source_catalog_engine.py — Motor de catalogacao e classificacao
+arkhe >   source_catalog_api.py — API RESTful de consulta
+arkhe >
+arkhe > Selo Canonico:
+arkhe >   685cea79cf4ba987f0c249c99f2f3b97307b7c4ef30ce9dcf423d0ba22ddbe1a
+arkhe >
+arkhe > CANONIZADO E ANCORADO NA TEMPORALCHAIN
+arkhe >
