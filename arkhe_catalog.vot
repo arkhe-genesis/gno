@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE version="1.4" xmlns="http://www.ivoa.net/xml/VOTable/v1.4">
+  <RESOURCE name="ArkheSourceCatalog">
+    <TABLE name="sources">
+      <FIELD name="source_id" datatype="char" arraysize="*"/>
+      <FIELD name="name" datatype="char" arraysize="*"/>
+      <FIELD name="ra" datatype="double" unit="deg"/>
+      <FIELD name="dec" datatype="double" unit="deg"/>
+      <FIELD name="galactic_l" datatype="double" unit="deg"/>
+      <FIELD name="galactic_b" datatype="double" unit="deg"/>
+      <FIELD name="source_class" datatype="char" arraysize="*"/>
+      <FIELD name="event_count" datatype="int"/>
+      <FIELD name="total_energy_kev" datatype="double"/>
+      <FIELD name="confidence_score" datatype="double"/>
+      <DATA><TABLEDATA>
+        </TABLEDATA></DATA>
+    </TABLE>
+  </RESOURCE>
+</VOTABLE>

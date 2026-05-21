@@ -1,0 +1,36 @@
+{
+  "substrate": "412-SOURCE-CATALOG",
+  "timestamp": 1779398259.0970333,
+  "architect": "0009-0005-2697-4668",
+  "total_sources": 0,
+  "total_events_processed": 0,
+  "sources": [],
+  "class_distribution": {},
+  "invariants": [
+    [
+      "GHOST",
+      "PASS",
+      "Ghost=1.0",
+      {}
+    ],
+    [
+      "LOOPSEAL",
+      "PASS",
+      "Loopseal=1.0",
+      {}
+    ],
+    [
+      "GAP",
+      "PASS",
+      "Gap=0.999",
+      {}
+    ],
+    [
+      "PHI",
+      "WARN",
+      "Phi=1.0000",
+      {}
+    ]
+  ],
+  "phi_c": 0.75
+}
