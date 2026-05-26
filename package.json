@@ -1,0 +1,28 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "[![License](https://img.shields.io/badge/license-GNO%20GPL%20v5-blue.svg)](LICENSE.md) [![Go Reference](https://pkg.go.dev/badge/hey/google)](https://gnolang.github.io/gno/github.com/gnolang/gno.html)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arkhe-Network/gno.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Arkhe-Network/gno/issues"
+  },
+  "homepage": "https://github.com/Arkhe-Network/gno#readme",
+  "dependencies": {
+    "@opensea/tool-sdk": "^0.10.0"
+  }
+}
