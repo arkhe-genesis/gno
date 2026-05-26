@@ -1,0 +1,21 @@
+# Regra 1: Substrato canonizado requer 18 invariants PASS
+Substrate(?s) ^ hasInvariant(?s, ?i) ^ status(?i, "PASS") ^ count(?i) >= 18
+-> status(?s, "CANONIZED_PROVISIONAL")
+
+# Regra 2: Cross-link válido requer ambos os substratos canonizados
+CrossLink(?cl) ^ linksTo(?cl, ?s1) ^ linksTo(?cl, ?s2) ^
+status(?s1, "CANONIZED_CLEAN") ^ status(?s2, "CANONIZED_CLEAN")
+-> verified(?cl, true)
+
+# Regra 3: Proposta aprovada requer TI >= 0.84
+GovernanceProposal(?p) ^ theosisIndex(?p, ?ti) ^ swrlb:greaterThan(?ti, 0.84)
+-> status(?p, "APPROVED")
+
+# Regra 4: Bridge packet válido requer ZK proof + Merkle proof
+BridgePacket(?bp) ^ hasZkProof(?bp, ?zk) ^ hasMerkleProof(?bp, ?mp) ^
+verified(?zk, true) ^ verified(?mp, true)
+-> valid(?bp, true)
+
+# Regra 5: Circle FHE requer ACL >= LEVEL_THIS
+Circle(?c) ^ hasAclLevel(?c, ?l) ^ swrlb:greaterThan(?l, 0)
+-> isolated(?c, true)
