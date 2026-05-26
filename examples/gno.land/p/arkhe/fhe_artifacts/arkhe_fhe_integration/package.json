@@ -1,0 +1,14 @@
+{
+  "name": "arkhe_fhe_integration",
+  "version": "1.0.0",
+  "description": "ARKHE OS Integration - FHE State Manager",
+  "main": "dist/fhe_state_manager.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}
