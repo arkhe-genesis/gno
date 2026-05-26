@@ -1,0 +1,12 @@
+{
+  "name": "my-tool",
+  "version": "1.0.0",
+  "description": "ARKHE Gateway integration",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@opensea/tool-sdk": "^0.10.0"
+  }
+}
