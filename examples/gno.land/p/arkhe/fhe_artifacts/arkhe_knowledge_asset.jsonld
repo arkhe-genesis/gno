@@ -1,0 +1,40 @@
+{
+  "@context": {
+    "arkhe": "https://arkhe.org/ontology/841#",
+    "web3dao": "https://github.com/Grasia/semantic-web3-dao#",
+    "grc20": "https://grc20.io/p/"
+  },
+  "@type": "arkhe:Substrate",
+  "@id": "arkhe:substrate-840",
+  "arkhe:substrateId": 840,
+  "arkhe:name": "OCTRA-FHE-BRIDGE",
+  "arkhe:phiCoherenceValue": 0.835,
+  "arkhe:theosisIndex": 0.84,
+  "arkhe:status": "CANONIZED_PROVISIONAL",
+  "arkhe:hasSeal": {
+    "@type": "arkhe:Seal",
+    "arkhe:sealHash": "7c1e8d3f9a2b5c6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e",
+    "arkhe:hashAlgorithm": "SHA3-256"
+  },
+  "arkhe:hasInvariant": [
+    {
+      "@type": "arkhe:Invariant",
+      "arkhe:name": "Criptográfico",
+      "arkhe:value": 0.92,
+      "arkhe:threshold": 0.70,
+      "arkhe:status": "PASS"
+    }
+  ],
+  "arkhe:linksTo": [
+    {
+      "@type": "arkhe:CrossLink",
+      "arkhe:targetSubstrate": "arkhe:substrate-561",
+      "arkhe:verified": true
+    }
+  ],
+  "web3dao:implementedBy": {
+    "@type": "web3dao:SmartContract",
+    "web3dao:address": "0x...",
+    "web3dao:chain": "Gno.land"
+  }
+}

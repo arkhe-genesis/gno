@@ -1,0 +1,16 @@
+8. METADADOS DO SUBSTRATO 841
+
+| Campo | Valor |
+|:---|:---|
+| Substrate ID | 841 |
+| Nome | WEB3-ONTOLOGY-BRIDGE |
+| Categoria | Semantic Layer / Knowledge Graph |
+| Status | PROPOSED |
+| Φ_C | 0.820000 (estimado) |
+| DCS-841 | 0.890000 (estimado) |
+| TI | 0.820000 (estimado) |
+| Invariantes | 18/18 (pendente validação) |
+| Cross-links | 6 (840, 561, 564, 583, 610, 612) |
+| Padrões | OWL 2 DL, GRC-20, JSON-LD, SPARQL |
+| Privacidade | FHE (CoFHE integration) |
+| Governança | SWRL rules + Web3-DAO ontology |
