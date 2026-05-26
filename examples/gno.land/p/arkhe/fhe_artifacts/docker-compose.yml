@@ -1,0 +1,110 @@
+version: '3.8'
+
+services:
+  octra-node:
+    image: octra-labs/node:latest
+    container_name: octra-fhe-node
+    ports:
+      - "8443:8443"
+      - "9735:9735"
+    volumes:
+      - octra-data:/var/lib/octra
+    environment:
+      - OCTRA_NETWORK=testnet
+      - OCTRA_CIRCLE_ENABLED=true
+      - OCTRA_FHE_MODE=hfhe
+      - OCTRA_BOOTSTRAP_INTERVAL=3600
+    networks:
+      - bridge-network
+    restart: unless-stopped
+
+  gno-node:
+    image: gnolang/gno:latest
+    container_name: gno-tendermint2
+    ports:
+      - "26657:26657"
+      - "26656:26656"
+    volumes:
+      - gno-data:/root/.gno
+    environment:
+      - GNO_CHAIN_ID=gno-local
+      - GNO_MONIKER=arkhe-bridge-node
+    networks:
+      - bridge-network
+    restart: unless-stopped
+
+  bridge-relay:
+    build: ./gno_octra_relay
+    container_name: bridge-relay-840
+    ports:
+      - "7474:7474"
+    environment:
+      - GNO_ENDPOINT=http://gno-node:26657
+      - OCTRA_ENDPOINT=http://octra-node:8443
+      - ARKHE_ENDPOINT=http://arkhe-container:7473
+      - BRIDGE_ID=840-OCTRA-FHE-BRIDGE
+      - PHI_COHERENCE=0.835
+    depends_on:
+      - gno-node
+      - octra-node
+    networks:
+      - bridge-network
+    restart: unless-stopped
+
+  arkhe-container:
+    image: arkhe-os:latest
+    container_name: arkhe-os-840
+    ports:
+      - "7473:7473"
+      - "7475:7475"
+    volumes:
+      - arkhe-data:/var/lib/arkhe
+      - ./arkhe_fhe_integration:/app/integrations/840-octra
+    environment:
+      - ARKHE_SUBSTRATE_ID=840
+      - ARKHE_PHI_C=0.835
+      - OCTRA_BRIDGE_ENDPOINT=http://bridge-relay:7474
+      - MCP_STATELESS_ENABLED=true
+    depends_on:
+      - bridge-relay
+    networks:
+      - bridge-network
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus-840
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - bridge-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-840
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/dashboards:/etc/grafana/provisioning/dashboards
+    depends_on:
+      - prometheus
+    networks:
+      - bridge-network
+
+volumes:
+  octra-data:
+  gno-data:
+  arkhe-data:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  bridge-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
