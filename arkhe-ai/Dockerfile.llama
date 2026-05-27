@@ -1,0 +1,12 @@
+FROM ghcr.io/ggerganov/llama.cpp:server
+
+COPY arkhe-os.gguf /models/arkhe-os.gguf
+
+ENV MODEL=/models/arkhe-os.gguf
+ENV HOST=0.0.0.0
+ENV PORT=8080
+
+EXPOSE 8080
+
+ENTRYPOINT ["/app/llama-server"]
+CMD ["-m", "/models/arkhe-os.gguf", "--host", "0.0.0.0", "--port", "8080"]
