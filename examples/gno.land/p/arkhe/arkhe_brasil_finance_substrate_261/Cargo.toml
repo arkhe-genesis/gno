@@ -1,0 +1,20 @@
+[package]
+name = "arkhe_brasil_finance_substrate_261"
+version = "0.1.0-arkhe"
+edition = "2021"
+authors = ["ARKHE-OS Architect <orcid:0009-0005-2697-4668>"]
+description = "Integração SPB/SPI (Pix) e Clearing para o ecossistema ARKHE-OS."
+
+[dependencies]
+arkhe_jax_core = { path = "../arkhe_jax_substrate_260/arkhe_jax_core" }
+arkhe_jax_zk = { path = "../arkhe_jax_substrate_260/arkhe_jax_zk" }
+reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+tokio = { version = "1.37", features = ["full"] }
+quick-xml = { version = "0.31", features = ["serialize"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha3 = "0.10"
+hmac = "0.12"
+hex = "0.4"
+thiserror = "1.0"
+tracing = "0.1"

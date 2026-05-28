@@ -1,0 +1,17 @@
+# Configurações dos ambientes SPB/SPI (BCB)
+environments:
+  sandbox:
+    spb_url: "https://sandbox.spb.bcb.gov.br"
+    spi_url: "https://sandbox.spi.bcb.gov.br"
+    clearing_url: "https://sandbox.clearing.b3.com.br"
+    tls_verify: false
+  hml:
+    spb_url: "https://hml.spb.bcb.gov.br"
+    spi_url: "https://hml.spi.bcb.gov.br"
+    clearing_url: "https://hml.clearing.b3.com.br"
+    tls_verify: true
+  prod:
+    spb_url: "https://spb.bcb.gov.br"
+    spi_url: "https://spi.bcb.gov.br"
+    clearing_url: "https://clearing.b3.com.br"
+    tls_verify: true
