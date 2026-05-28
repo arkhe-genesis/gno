@@ -41,3 +41,7 @@
   name: "Interfold-Confidential-Coordination-Bridge"
   category: "coordination"
   links: ["840", "841", "255", "923", "912", "257", "900", "898", "930"]
+"260":
+  name: "ARKHE-JAX"
+  category: "cognition"
+  links: ["223", "230", "248", "254", "255", "840", "898", "912", "913", "930"]

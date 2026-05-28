@@ -43,3 +43,4 @@ wal/
 
 # Gnoweb frontend
 node_modules/
+examples/gno.land/p/arkhe/fhe_artifacts/arkhe_jax/target
