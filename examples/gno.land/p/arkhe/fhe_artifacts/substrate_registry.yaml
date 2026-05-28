@@ -45,3 +45,7 @@
   name: "ARKHE-JAX"
   category: "cognition"
   links: ["223", "230", "248", "254", "255", "840", "898", "912", "913", "930"]
+"923.2":
+  name: "Vulnerability TemporalChain"
+  category: "security"
+  links: ["944", "255", "260.2", "923"]
