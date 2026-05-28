@@ -1,0 +1,36 @@
+substrato:
+  id: 940
+  nome: Claude Harness Adapter
+  status: CANONIZED_PROVISIONAL
+  parent: 864 (Root) + 939 (Runtime)
+  description: >
+    Adaptador MCP (Model Context Protocol) que expõe 16 ferramentas
+    específicas do ecossistema ARKHE para o Claude Code Opus 4.7.
+    Serve como a 'espinal medula' entre a IA e os substratos de execução.
+  components:
+    - harness_adapter.py      (Python, MCP Server)
+    - schema_940.yaml         (Este ficheiro)
+    - tests/test_harness.py   (pytest, mock MCP)
+  exposed_tools:
+    - name: invoke_glasswing (944)
+    - name: anchor_temporal (255.2)
+    - name: query_ontology (913)
+    - name: run_jax_proof (260.2)
+    - name: epistemically_sign (255.1)
+    - name: search_grounding (917)
+    - name: ingest_design_tokens (943)
+    - name: set_cognitive_effort (941)
+  mcp_config:
+    version: "1.0"
+    transport: "stdio"
+    capabilities: ["tools", "resources", "prompts"]
+  cross_links:
+    - 944  (Glasswing Sentinel)
+    - 255.2 (Ethereum Bridge)
+    - 913  (World Model Ontology)
+    - 260.2 (ARKHE-JAX ZK)
+    - 255.1 (Epistemic Signature)
+    - 917  (Google Web Grounding)
+    - 943  (Visual Ontology Layer)
+    - 941  (Cognitive Effort Controller)
+    - 939  (Runtime Unificado)
