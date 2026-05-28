@@ -37,3 +37,7 @@
   name: "EIP-8272-Recent-Roots-Bridge"
   category: "security"
   links: ["824", "832", "863"]
+"931":
+  name: "Interfold-Confidential-Coordination-Bridge"
+  category: "coordination"
+  links: ["840", "841", "255", "923", "912", "257", "900", "898", "930"]
