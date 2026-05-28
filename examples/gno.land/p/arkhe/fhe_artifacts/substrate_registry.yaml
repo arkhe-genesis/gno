@@ -45,20 +45,7 @@
   name: "ARKHE-JAX"
   category: "cognition"
   links: ["223", "230", "248", "254", "255", "840", "898", "912", "913", "930"]
-
-"940":
-  name: "Claude Harness Adapter"
-  category: "ai_integration"
-  links: ["944", "255.2", "913", "260.2", "255.1", "917", "943", "941", "939"]
-"941":
-  name: "Cognitive Effort Controller"
-  category: "ai_integration"
-  links: ["898", "933", "939", "940", "261.1"]
-"942":
-  name: "Catedral Code Agent"
-  category: "ai_integration"
-  links: ["940", "939", "923.2", "944", "917", "255.1", "255.2", "912", "255", "260.2"]
-"943":
-  name: "Visual Ontology Layer"
-  category: "ui_ontology"
-  links: ["913", "924", "936", "929", "921.2", "943"]
+"923.2":
+  name: "Vulnerability TemporalChain"
+  category: "security"
+  links: ["944", "255", "260.2", "923"]
