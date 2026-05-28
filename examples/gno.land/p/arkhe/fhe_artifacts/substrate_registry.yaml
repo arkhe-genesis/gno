@@ -49,3 +49,7 @@
   name: "Vulnerability TemporalChain"
   category: "security"
   links: ["944", "255", "260.2", "923"]
+"944":
+  name: "Glasswing Sentinel"
+  category: "security"
+  links: ["923.2"]
