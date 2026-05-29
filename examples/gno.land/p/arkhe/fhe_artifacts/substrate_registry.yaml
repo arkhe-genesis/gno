@@ -81,3 +81,11 @@
   name: "ARKHE.GGUF (Foundation Model Distillation)"
   category: "Model"
   links: ["923", "933", "938", "255", "944", "912", "275"]
+"947":
+  name: "OPENMDW-BRIDGE"
+  category: "Scientific Computing / Molecular Dynamics"
+  links: ["554", "570", "890", "936", "501", "259", "276.1", "270"]
+"948":
+  name: "FCR-SIMULATOR-BRIDGE"
+  category: "Scientific Computing / Fuel Cell Simulation"
+  links: ["554", "890", "936", "451", "458", "193", "255", "923"]
