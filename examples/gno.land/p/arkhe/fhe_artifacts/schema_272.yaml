@@ -1,0 +1,50 @@
+# schema_272.yaml — Oracle AI Database × AWS Bedrock Bridge
+substrato:
+  id: 272
+  nome: ARKHE‑ORACLE‑AWS‑BRIDGE
+  versao: "3.3.0"
+  status: CANONIZED_PROVISIONAL
+  descricao: >
+    Ponte bidirecional entre Oracle AI Database (com AI Vector Search)
+    e Amazon Bedrock (embeddings e inferência), operando sobre OCI e AWS.
+    Fornece persistência vetorial de alto desempenho, integração de modelos
+    de fundação e migração contínua de cargas de trabalho entre nuvens.
+  deuses_patronos:
+    - Seshat (Escrita Sagrada, Bancos de Dados)
+    - Janus (Portais entre Nuvens, Transições)
+  linguagens: [Python, Rust, SQL]
+
+componentes:
+  - nome: oracle_vector_store
+    tipo: persistencia
+    descricao: >
+      Interface para Oracle AI Database com AI Vector Search.
+      Suporta índices IVF e HNSW, consultas de similaridade de cosseno,
+      e metadados JSON para filtragem híbrida.
+    endpoints:
+      - insert_vectors
+      - similarity_search
+      - hybrid_search
+
+  - nome: bedrock_embedding_service
+    tipo: inferencia
+    descricao: >
+      Geração de embeddings via Amazon Bedrock (Titan, Cohere, etc.)
+      e inferência de LLMs para tarefas de grounding e raciocínio.
+    endpoints:
+      - generate_embedding
+      - generate_text
+
+  - nome: oci_aws_bridge
+    tipo: rede
+    descricao: >
+      Ponte de rede dedicada entre OCI e AWS (Oracle Interconnect
+      for AWS), garantindo latência < 2ms e largura de banda de
+      até 100 Gbps entre regiões pareadas.
+
+cross_links:
+  - 933 (FluxMem — grafo de memória com embeddings)
+  - 890 (WorldModel — grounding multimodal)
+  - 917 (Web Grounding — busca web)
+  - 940 (Claude Harness — integração MCP)
+  - 941 (Cognitive Effort — controle adaptativo)

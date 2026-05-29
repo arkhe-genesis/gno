@@ -65,3 +65,7 @@
   name: "DZ Routing Engine (Optimized Pathfinding)"
   category: "routing"
   links: ["267", "268", "262.2", "923", "255", "944", "931", "917", "930"]
+"272":
+  name: "ARKHE-ORACLE-AWS-BRIDGE"
+  category: "persistence"
+  links: ["933", "890", "917", "940", "941"]
