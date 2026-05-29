@@ -1,3 +1,6 @@
-[submodule "examples/gno.land/p/arkhe/atlas-lean"]
-	path = examples/gno.land/p/arkhe/atlas-lean
-	url = https://github.com/facebookresearch/atlas-lean
+[submodule "examples/gno.land/p/arkhe/fhe_artifacts/openmdw_substrate_947"]
+	path = examples/gno.land/p/arkhe/fhe_artifacts/openmdw_substrate_947
+	url = https://github.com/OpenMDW/openmdw
+[submodule "examples/gno.land/p/arkhe/fhe_artifacts/fcr_simulator_substrate_948"]
+	path = examples/gno.land/p/arkhe/fhe_artifacts/fcr_simulator_substrate_948
+	url = https://github.com/ethpandaops/fcr-simulator
