@@ -1,0 +1,3 @@
+[submodule "examples/gno.land/p/arkhe/atlas-lean"]
+	path = examples/gno.land/p/arkhe/atlas-lean
+	url = https://github.com/facebookresearch/atlas-lean

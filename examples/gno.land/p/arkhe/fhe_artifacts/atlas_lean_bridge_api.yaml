@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+  title: Arkhe ATLAS-LEAN Bridge API
+  description: API to interface with the Autoformalized Textbook Library At Scale (ATLAS) repository.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Local server
+paths:
+  /books:
+    get:
+      summary: List all formalized books available in ATLAS.
+      responses:
+        '200':
+          description: A list of book names.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /books/{book_name}/report:
+    get:
+      summary: Get the evaluation report for a specific book.
+      parameters:
+        - name: book_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The evaluation report.
+          content:
+            application/json:
+              schema:
+                type: object
+        '404':
+          description: Book or report not found.
+  /books/{book_name}/theorems/{theorem_name}:
+    get:
+      summary: Get a specific theorem from a book.
+      parameters:
+        - name: book_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: theorem_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The theorem data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  book:
+                    type: string
+                  status:
+                    type: string

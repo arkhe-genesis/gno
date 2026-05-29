@@ -81,6 +81,10 @@
   name: "ARKHE.GGUF (Foundation Model Distillation)"
   category: "Model"
   links: ["923", "933", "938", "255", "944", "912", "275"]
+"980":
+  name: "ATLAS-LEAN-BRIDGE"
+  category: "Mathematics"
+  links: ["276", "912"]
 "945":
   name: "VYPER-EVOLUTION-ENGINE"
   category: "Compiler Infrastructure / Smart Contract Evolution"

@@ -1,0 +1,27 @@
+apiVersion: arkhe.schemas/v1
+kind: SchemaBundle
+metadata:
+  name: atlaslean-v1
+  version: "1.0.0"
+  substrate: "980"
+  seal: "sha3-256:abcd1234efgh5678"
+spec:
+  service: AtlasLeanIntegrationService
+  rpcs:
+    GetTheorems:
+      request:
+        header: ArkheHeader
+        book_id: {type: string}
+      response:
+        theorems: {type: array, items: TheoremData}
+
+  messages:
+    TheoremData:
+      fields:
+        name: {type: string}
+        statement: {type: string}
+        proof: {type: string}
+        is_proved: {type: boolean}
+
+  config:
+    lean_version: "4.12.0"
