@@ -53,3 +53,15 @@
   name: "Glasswing Sentinel"
   category: "security"
   links: ["923.2"]
+"267":
+  name: "DoubleZero Network Bridge"
+  category: "routing"
+  links: ["262", "262.2", "255", "255.1", "923", "923.2", "944", "931", "917", "930", "912", "933", "927"]
+"268":
+  name: "Edge Filter Controller (FPGA Hardware Layer)"
+  category: "routing"
+  links: ["267", "255", "255.1", "944", "262.2", "923"]
+"269":
+  name: "DZ Routing Engine (Optimized Pathfinding)"
+  category: "routing"
+  links: ["267", "268", "262.2", "923", "255", "944", "931", "917", "930"]
