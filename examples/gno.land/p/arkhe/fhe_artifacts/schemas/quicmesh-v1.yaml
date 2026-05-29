@@ -1,0 +1,80 @@
+apiVersion: arkhe.schemas/v1
+kind: SchemaBundle
+metadata:
+  name: quicmesh-v1
+  version: "1.0.0"
+  substrate: "262"
+  seal: "sha3-256:m3n4o5..."
+spec:
+  service: QUICMeshService
+  rpcs:
+    OpenChannel:
+      request:
+        header: ArkheHeader
+        channel_id:
+          type: string
+          pattern: "^[a-z]+/[0-9]+(\.[0-9]+)*$"
+          examples: ["tensor/260", "pix/261", "zk/255"]
+        channel_type:
+          type: string
+          enum: [BROADCAST, UNICAST, MULTICAST]
+        retention_sec: {type: integer, default: 300, min: 0}
+      response: ChannelInfo
+
+    Publish:
+      request:
+        header: ArkheHeader
+        channel_id: {type: string}
+        payload: {type: bytes}
+        quorum_ack: {type: boolean, default: false}
+        quorum_size: {type: integer, default: 2, min: 1}
+      response:
+        message_id: {type: string}
+        replicas_ack: {type: integer}
+        quorum_reached: {type: boolean}
+
+    Subscribe:
+      request:
+        header: ArkheHeader
+        channel_id: {type: string}
+        payload_type_filter: {type: string, nullable: true}
+        from_timestamp_ns: {type: integer, format: int64}
+      response:
+        stream: true
+        type: MeshMessage
+
+    MeshStatus:
+      request:
+        node_id: {type: string, nullable: true}
+      response:
+        mesh_id: {type: string}
+        node_count: {type: integer}
+        channel_count: {type: integer}
+        messages_per_sec: {type: integer}
+        nodes: {type: array, items: NodeHealth}
+
+  messages:
+    MeshMessage:
+      fields:
+        header: ArkheHeader
+        channel_id: {type: string}
+        payload: {type: bytes}
+        nonce: {type: bytes}
+        ttl_hops: {type: integer, default: 16, min: 0}
+        route: {type: array, items: {type: string}}
+
+    NodeHealth:
+      fields:
+        node_id: {type: string}
+        addr: {type: string}
+        healthy: {type: boolean}
+        last_seen_ns: {type: integer, format: int64}
+        latency_ms: {type: float}
+
+  config:
+    quic_port: 4433
+    tls_version: "1.3"
+    pqc_hybrid: "X25519Kyber768"
+    max_message_size: 1048576
+    default_retention_sec: 300
+    security_channels_retention: 0

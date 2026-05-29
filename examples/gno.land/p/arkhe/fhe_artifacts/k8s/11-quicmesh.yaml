@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: quicmesh
+  namespace: arkhe-cathedral
+  labels:
+    app: quicmesh
+    substrate: "262"
+spec:
+  selector:
+    matchLabels:
+      app: quicmesh
+  template:
+    metadata:
+      labels:
+        app: quicmesh
+        substrate: "262"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+      - name: quicmesh
+        image: arkhe-os/quicmesh:v1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: quic
+          containerPort: 4433
+          protocol: UDP
+          hostPort: 4433
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+        env:
+        - name: GOMAXPROCS
+          value: "4"
+        - name: QUIC_PORT
+          value: "4433"
+        - name: TLS_PQC_HYBRID
+          value: "X25519Kyber768"
+        - name: MESH_NODE_TYPE
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        securityContext:
+          capabilities:
+            add: ["NET_BIND_SERVICE"]
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: tls-certs
+          mountPath: /etc/arkhe/tls
+          readOnly: true
+      volumes:
+      - name: tls-certs
+        secret:
+          secretName: arkhe-crypto-secrets
+          items:
+          - key: tls-cert.pem
+            path: cert.pem
+          - key: tls-key.pem
+            path: key.pem

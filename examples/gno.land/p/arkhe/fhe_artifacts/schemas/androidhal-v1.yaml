@@ -1,0 +1,68 @@
+apiVersion: arkhe.schemas/v1
+kind: SchemaBundle
+metadata:
+  name: androidhal-v1
+  version: "1.0.0"
+  substrate: "929"
+  seal: "sha3-256:h4i5j6..."
+spec:
+  service: AndroidHALService
+  rpcs:
+    StreamTelemetry:
+      request:
+        stream: true
+        type: TelemetryPacket
+      response:
+        stream: true
+        type: TelemetryAck
+
+    SendCommand:
+      request:
+        header: ArkheHeader
+        device_id: {type: string}
+        command_type:
+          type: string
+          enum: [CAPTURE_IMAGE, START_RECORDING, READ_NFC, VIBRATE]
+        parameters_json: {type: bytes}
+      response:
+        command_id: {type: string}
+        status:
+          type: string
+          enum: [SENT, ACKED, FAILED, TIMEOUT]
+        response_data: {type: bytes, nullable: true}
+
+    RegisterDevice:
+      request:
+        header: ArkheHeader
+        device_id: {type: string}
+        device_pubkey: {type: bytes, format: ed25519-pubkey}
+        channels: {type: array, items: {type: string}}
+        device_model: {type: string}
+      response:
+        registered: {type: boolean}
+        assigned_node: {type: string}
+        mesh_pubkey: {type: bytes}
+        temporal_event_id: {type: string}
+
+  messages:
+    SensorReading:
+      fields:
+        sensor_type:
+          type: string
+          enum: [GPS, ACCEL, GYRO, MAG, PROX, LIGHT, CAMERA, MIC]
+        data: {type: bytes}
+        accuracy: {type: float}
+        sampled_at_ns: {type: integer, format: int64}
+
+    TelemetryPacket:
+      fields:
+        header: ArkheHeader
+        device_id: {type: string}
+        readings: {type: array, items: SensorReading}
+        batch_timestamp_ns: {type: integer, format: int64}
+
+  config:
+    telemetry_batch_size: 100
+    telemetry_flush_interval_ms: 1000
+    command_timeout_ms: 5000
+    consent_required_sensors: [GPS, CAMERA, MIC]

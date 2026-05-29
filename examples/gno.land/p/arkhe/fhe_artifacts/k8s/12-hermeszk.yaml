@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermeszk
+  namespace: arkhe-cathedral
+  labels:
+    app: hermeszk
+    substrate: "255"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hermeszk
+  template:
+    metadata:
+      labels:
+        app: hermeszk
+        substrate: "255"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+    spec:
+      nodeSelector:
+        nvidia.com/gpu.present: "true"
+      tolerations:
+      - key: nvidia.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: hermeszk
+        image: arkhe-os/hermeszk:v1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: grpc
+          containerPort: 50051
+        - name: metrics
+          containerPort: 9090
+        env:
+        - name: RUST_LOG
+          value: "info"
+        - name: PROVING_BACKEND
+          value: "ark-works-gpu"
+        - name: CUDA_VISIBLE_DEVICES
+          value: "0"
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "2000m"
+            nvidia.com/gpu: 1
+          limits:
+            memory: "16Gi"
+            cpu: "8000m"
+            nvidia.com/gpu: 1
+        volumeMounts:
+        - name: circuit-registry
+          mountPath: /circuits
+        - name: schemas
+          mountPath: /etc/arkhe/schemas
+      volumes:
+      - name: circuit-registry
+        persistentVolumeClaim:
+          claimName: circuit-registry-pvc
+      - name: schemas
+        configMap:
+          name: arkhe-schemas
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: circuit-registry-pvc
+  namespace: arkhe-cathedral
+spec:
+  accessModes: ["ReadWriteMany"]
+  storageClassName: shared-ssd
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hermeszk
+  namespace: arkhe-cathedral
+spec:
+  selector:
+    app: hermeszk
+  ports:
+  - name: grpc
+    port: 50051
+    targetPort: 50051
+  type: ClusterIP

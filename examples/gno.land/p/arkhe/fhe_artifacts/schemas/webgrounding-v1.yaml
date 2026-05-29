@@ -1,0 +1,74 @@
+apiVersion: arkhe.schemas/v1
+kind: SchemaBundle
+metadata:
+  name: webgrounding-v1
+  version: "1.0.0"
+  substrate: "917"
+  seal: "sha3-256:k7l8m9..."
+spec:
+  service: WebGroundingService
+  rpcs:
+    Search:
+      request:
+        header: ArkheHeader
+        query: {type: string}
+        domains: {type: array, items: {type: string}, nullable: true}
+        date_range: {type: string, pattern: "^\d{4}-\d{2}-\d{2}\.\.\d{4}-\d{2}-\d{2}$"}
+        max_results: {type: integer, default: 10, max: 100}
+        auto_fact_check: {type: boolean, default: false}
+      response:
+        search_id: {type: string}
+        results: {type: array, items: SearchResult}
+        query_latency_ms: {type: float}
+
+    ExtractFacts:
+      request:
+        header: ArkheHeader
+        url: {type: string, format: uri}
+        use_llm: {type: boolean, default: true}
+      response:
+        extraction_id: {type: string}
+        facts: {type: array, items: ExtractedFact}
+        content_hash: {type: bytes, format: sha3-256}
+
+    FactCheck:
+      request:
+        header: ArkheHeader
+        claim: {type: string, max_length: 5000}
+        preferred_sources: {type: array, items: {type: string}, nullable: true}
+        max_sources: {type: integer, default: 10}
+      response:
+        check_id: {type: string}
+        verdict:
+          type: string
+          enum: [TRUE, FALSE, PARTIALLY_TRUE, UNVERIFIABLE, CONTRADICTORY]
+        confidence: {type: float}
+        evidence: {type: array, items: Evidence}
+        reasoning: {type: string}
+
+  messages:
+    SearchResult:
+      fields:
+        result_id: {type: string}
+        title: {type: string}
+        url: {type: string}
+        snippet: {type: string}
+        engine_score: {type: float}
+        credibility_score: {type: float}
+        facts: {type: array, items: ExtractedFact}
+
+    Evidence:
+      fields:
+        source_url: {type: string}
+        supporting_text: {type: string}
+        evidence_type:
+          type: string
+          enum: [SUPPORTS, REFUTES, MENTIONS]
+        source_credibility: {type: float}
+
+  config:
+    search_engines: [GOOGLE_CSE, SERPAPI]
+    rate_limit_per_minute: 100
+    factcheck_llm_model: "claude-3-5-sonnet"
+    trust_threshold_official: 0.9
+    trust_threshold_news: 0.6

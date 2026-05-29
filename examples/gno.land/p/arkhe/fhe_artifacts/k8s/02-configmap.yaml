@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: arkhe-schemas
+  namespace: arkhe-cathedral
+data:
+  arkhe-common-v1.yaml: |
+    apiVersion: arkhe.schemas/v1
+    kind: SchemaBundle
+    metadata:
+      name: arkhe-common-v1
+      version: "1.0.0"
+    spec:
+      messages:
+        ArkheHeader:
+          fields:
+            trace_id: {type: string, format: uuid-v7}
+            session_id: {type: string, format: ed25519-pubkey-hex}
+            substrate_id: {type: string, pattern: "^[0-9]+(\.[0-9]+)*$"}
+            timestamp_ns: {type: integer, format: int64}
+            payload_hash: {type: bytes, format: sha3-256}
+            signature: {type: bytes, format: ed25519-signature}
+            schema_version: {type: string, format: semver}
+  constitution.md: |
+    # Constituicao ARKHE — P1-P7
+    ## P1: Transparencia Total
+    ## P2: Privacidade e Dignidade Humana
+    ## P3: Soberania e Autonomia Local
+    ## P4: Verificabilidade e Grounding
+    ## P5: Continuidade e Persistencia Epistemica
+    ## P6: Seguranca e Resiliencia
+    ## P7: Alinhamento e Benevolencia

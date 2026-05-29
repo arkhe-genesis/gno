@@ -1,0 +1,68 @@
+apiVersion: arkhe.schemas/v1
+kind: SchemaBundle
+metadata:
+  name: mcpgateway-v1
+  version: "1.0.0"
+  substrate: "940"
+  seal: "sha3-256:e1f2g3..."
+spec:
+  service: MCPGatewayService
+  rpcs:
+    ListTools:
+      request:
+        header: ArkheHeader
+        model_id: {type: string}
+        filter_by_permissions: {type: boolean, default: true}
+      response:
+        tools: {type: array, items: ToolSpec}
+
+    ExecuteTool:
+      request:
+        header: ArkheHeader
+        tool_name: {type: string}
+        model_id: {type: string}
+        arguments_json: {type: bytes}
+        capture_epistemic: {type: boolean, default: false}
+      response:
+        execution_id: {type: string}
+        success: {type: boolean}
+        result_json: {type: bytes}
+        error_message: {type: string, nullable: true}
+        epistemic_state_hash: {type: bytes, format: sha3-256, nullable: true}
+        execution_ms: {type: integer}
+
+    StreamNotifications:
+      request:
+        header: ArkheHeader
+        model_id: {type: string}
+        notification_types: {type: array, items: {type: string}, nullable: true}
+      response:
+        stream: true
+        type: Notification
+
+  messages:
+    ToolSpec:
+      fields:
+        tool_name: {type: string}
+        description: {type: string}
+        input_schema_json: {type: string}
+        output_schema_json: {type: string}
+        required_permissions: {type: array, items: {type: string}}
+        target_substrate: {type: string}
+        avg_latency_ms: {type: float}
+
+    Notification:
+      fields:
+        notification_id: {type: string}
+        notification_type:
+          type: string
+          enum: [MEMORY_UPDATE, ALERT, DECISION_REQUIRED, STATUS]
+        payload_json: {type: bytes}
+        timestamp_ns: {type: integer, format: int64}
+        source_substrate: {type: string}
+
+  config:
+    mcp_protocol_version: "2024-11-05"
+    tool_timeout_ms: 30000
+    notification_push_latency_ms: 100
+    epistemic_capture_default: false

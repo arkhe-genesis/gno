@@ -1,0 +1,74 @@
+apiVersion: arkhe.schemas/v1
+kind: SchemaBundle
+metadata:
+  name: worldmodel-v1
+  version: "1.0.0"
+  substrate: "890"
+  seal: "sha3-256:p6q7r8..."
+spec:
+  service: WorldModelService
+  rpcs:
+    Query:
+      request:
+        header: ArkheHeader
+        query_text: {type: string, max_length: 10000}
+        modalities: {type: array, items: Modality}
+        memory_shard_ids: {type: array, items: {type: string}}
+        return_sources: {type: boolean, default: false}
+        budget: ComputeBudget
+      response:
+        response_id: {type: string}
+        generated_text: {type: string}
+        output_modalities: {type: array, items: Modality}
+        sources: {type: array, items: GroundingRef}
+        confidence: {type: float, min: 0.0, max: 1.0}
+        tokens_used: {type: integer}
+        inference_ms: {type: integer}
+
+    Simulate:
+      request:
+        header: ArkheHeader
+        scenario_id: {type: string}
+        scenario_config: {type: bytes}
+        horizon_steps: {type: integer, min: 1, max: 1000}
+        return_trajectory: {type: boolean, default: false}
+      response:
+        stream: true
+        type: SimulationChunk
+
+    IngestGrounding:
+      request:
+        header: ArkheHeader
+        facts: {type: array, items: GroundingFact}
+      response:
+        facts_ingested: {type: integer}
+        facts_rejected: {type: integer}
+        batch_id: {type: string}
+
+  messages:
+    ComputeBudget:
+      fields:
+        max_tokens: {type: integer, default: 4096}
+        max_latency_sec: {type: float, default: 10.0}
+        complexity_tier:
+          type: string
+          enum: [FAST, STANDARD, DEEP, EXPERT]
+          default: STANDARD
+
+    GroundingFact:
+      fields:
+        fact_id: {type: string}
+        fact_type:
+          type: string
+          enum: [WEB_EXTRACT, SENSOR_READING, CHAIN_EVENT, HUMAN_INPUT]
+        content: {type: bytes}
+        trust_score: {type: float, min: 0.0, max: 1.0}
+        observed_at_ns: {type: integer, format: int64}
+        source_uri: {type: string}
+
+  config:
+    default_model: "arkhe-foundation-v1"
+    max_concurrent_simulations: 10
+    grounding_trust_threshold: 0.3
+    fast_latency_ms: 500
+    deep_latency_ms: 10000

@@ -1,0 +1,80 @@
+apiVersion: arkhe.schemas/v1
+kind: SchemaBundle
+metadata:
+  name: brasilfinance-v1
+  version: "1.0.0"
+  substrate: "261.1"
+  seal: "sha3-256:y5z6a7..."
+spec:
+  service: BrasilFinanceService
+  rpcs:
+    InitiatePix:
+      request:
+        header: ArkheHeader
+        payment: PixPayment
+        use_zk_privacy: {type: boolean, default: false}
+        wait_confirmation: {type: boolean, default: false}
+      response:
+        tx_id: {type: string}
+        status:
+          type: string
+          enum: [PENDING, SETTLED, REJECTED, ERROR]
+        end_to_end_id: {type: string, nullable: true}
+        qr_code_emvco: {type: string, nullable: true}
+        zk_proof_hash: {type: bytes, format: sha3-256, nullable: true}
+        temporal_event_id: {type: string}
+
+    GenerateQR:
+      request:
+        header: ArkheHeader
+        amount_brl: {type: float, min: 0.0}
+        description: {type: string}
+        merchant_name: {type: string}
+        merchant_city: {type: string}
+        pix_key: {type: string}
+      response:
+        qr_code_emvco: {type: string}
+        qr_image_b64: {type: string}
+        tx_id: {type: string}
+
+    QueryPixStatus:
+      request:
+        tx_id: {type: string}
+        end_to_end_id: {type: string, nullable: true}
+      response:
+        status: {type: string}
+        settled_at_ns: {type: integer, format: int64, nullable: true}
+        rejection_reason: {type: string, nullable: true}
+
+    ComplianceCheck:
+      request:
+        header: ArkheHeader
+        tx_id: {type: string}
+        check_type:
+          type: string
+          enum: [AML, KYC, FRAUD, SANCTIONS]
+        enriched_data: {type: bytes}
+      response:
+        cleared: {type: boolean}
+        risk_score: {type: float, min: 0.0, max: 1.0}
+        alerts: {type: array, items: {type: string}}
+        engine_used: {type: string}
+
+  messages:
+    PixPayment:
+      fields:
+        tx_id:
+          type: string
+          format: uuid
+        pix_key: {type: string}
+        amount_brl: {type: float, min: 0.01}
+        description: {type: string, max_length: 140}
+        debtor_cpf_cnpj: {type: string, nullable: true}
+        creditor_name: {type: string}
+
+  config:
+    pix_endpoint: "https://pix.bcb.gov.br"
+    mTLS_cert_path: "/etc/arkhe/certs/pix.pem"
+    zk_circuit_id: "pix_anon_v2"
+    compliance_engines: [SMARTS, ACTIMIZE, BTCA, SAGE]
+    max_amount_zk_optional: 1000.0

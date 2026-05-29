@@ -69,3 +69,15 @@
   name: "ARKHE-ORACLE-AWS-BRIDGE"
   category: "persistence"
   links: ["933", "890", "917", "940", "941"]
+"274":
+  name: "ARKHE.SO (Linux Kernel Architecture)"
+  category: "Kernel"
+  links: ["923", "255", "262", "912", "944"]
+"275":
+  name: "ARKHE OS — Arquitetura Completa"
+  category: "Architecture"
+  links: ["923", "255", "912", "944"]
+"276":
+  name: "ARKHE.GGUF (Foundation Model Distillation)"
+  category: "Model"
+  links: ["923", "933", "938", "255", "944", "912", "275"]
