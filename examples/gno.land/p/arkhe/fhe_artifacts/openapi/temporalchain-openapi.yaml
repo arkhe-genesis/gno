@@ -1,0 +1,213 @@
+openapi: 3.1.0
+info:
+  title: ARKHE TemporalChain API
+  version: 1.0.0
+  description: Registro imutavel de eventos com anchor L2
+servers:
+  - url: https://api.arkhe.cathedral/api/v1
+    description: Production
+paths:
+  /temporalchain/events:
+    post:
+      operationId: commitEvent
+      summary: Registra evento na L2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                header:
+                  $ref: '#/components/schemas/ArkheHeader'
+                payload:
+                  $ref: '#/components/schemas/EventPayload'
+                wait_for_anchor:
+                  type: boolean
+                  default: false
+      responses:
+        '200':
+          description: Evento registrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommitEventResponse'
+        '400':
+          description: Header invalido
+        '429':
+          description: Rate limit exceeded
+
+  /temporalchain/events/{event_id}/anchor:
+    get:
+      operationId: verifyAnchor
+      summary: Verifica anchor on-chain
+      parameters:
+        - name: event_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Verificacao concluida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyAnchorResponse'
+
+  /temporalchain/events:
+    get:
+      operationId: queryEvents
+      summary: Query historico de eventos
+      parameters:
+        - name: substrate_id
+          in: query
+          schema:
+            type: string
+        - name: from
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+            maximum: 1000
+      responses:
+        '200':
+          description: Lista de eventos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryEventsResponse'
+
+  /temporalchain/events/stream:
+    get:
+      operationId: streamEvents
+      summary: Stream de eventos (SSE)
+      parameters:
+        - name: substrate_id
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Server-Sent Events stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+components:
+  schemas:
+    ArkheHeader:
+      type: object
+      required: [trace_id, session_id, substrate_id, timestamp_ns, payload_hash, signature, schema_version]
+      properties:
+        trace_id:
+          type: string
+          format: uuid
+        session_id:
+          type: string
+        substrate_id:
+          type: string
+          pattern: "^[0-9]+(\.[0-9]+)*$"
+        timestamp_ns:
+          type: integer
+          format: int64
+        payload_hash:
+          type: string
+          format: byte
+        signature:
+          type: string
+          format: byte
+        schema_version:
+          type: string
+
+    EventPayload:
+      type: object
+      properties:
+        event_type:
+          type: string
+          enum: [DECISION, ACTION, MEMORY_WRITE, ALERT, POLICY_VIOLATION]
+        serialized_data:
+          type: string
+          format: byte
+        substrate_id:
+          type: string
+        parent_event_id:
+          type: string
+          nullable: true
+
+    CommitEventResponse:
+      type: object
+      properties:
+        event_id:
+          type: string
+        receipt_hash:
+          type: string
+          format: byte
+        l2_tx_hash:
+          type: string
+          nullable: true
+        seal:
+          $ref: '#/components/schemas/ArkheSeal'
+        status:
+          type: string
+          enum: [RECEIVED_OFFCHAIN, ANCHORED_L2, ANCHORED_L1]
+
+    VerifyAnchorResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+        l1_block_number:
+          type: string
+        l1_tx_hash:
+          type: string
+        root_hash:
+          type: string
+          format: byte
+
+    QueryEventsResponse:
+      type: object
+      properties:
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        next_cursor:
+          type: string
+          nullable: true
+        total_count:
+          type: integer
+
+    Event:
+      type: object
+      properties:
+        event_id:
+          type: string
+        header:
+          $ref: '#/components/schemas/ArkheHeader'
+        payload:
+          $ref: '#/components/schemas/EventPayload'
+        seal:
+          $ref: '#/components/schemas/ArkheSeal'
+        status:
+          type: string
+
+    ArkheSeal:
+      type: object
+      properties:
+        zk_proof:
+          type: string
+          format: byte
+        temporal_anchor:
+          type: string
+        epistemic_hash:
+          type: string
+          format: byte
+        circuit_id:
+          type: string

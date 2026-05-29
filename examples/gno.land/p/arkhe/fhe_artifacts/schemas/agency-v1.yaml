@@ -1,0 +1,84 @@
+apiVersion: arkhe.schemas/v1
+kind: SchemaBundle
+metadata:
+  name: agency-v1
+  version: "1.0.0"
+  substrate: "891"
+  seal: "sha3-256:v2w3x4..."
+spec:
+  service: AgencyService
+  rpcs:
+    Deliberate:
+      request:
+        header: ArkheHeader
+        intention: Intention
+        epistemic_state_hash: {type: bytes, format: sha3-256}
+        include_mythos: {type: boolean, default: false}
+      response:
+        deliberation_id: {type: string}
+        decision: Decision
+        reasoning_steps: {type: array, items: {type: string}}
+        epistemic_state_hash: {type: bytes, format: sha3-256}
+
+    Dispatch:
+      request:
+        header: ArkheHeader
+        deliberation_id: {type: string}
+        adjudicator_id: {type: string, nullable: true}
+      response:
+        action_id: {type: string}
+        status:
+          type: string
+          enum: [DISPATCHED, FAILED, TIMEOUT]
+        executor_ack: {type: string}
+
+    ListPending:
+      request:
+        filter_substrate: {type: string, nullable: true}
+        since_ns: {type: integer, format: int64}
+        limit: {type: integer, default: 100}
+      response:
+        actions: {type: array, items: PendingAction}
+
+    Adjudicate:
+      request:
+        header: ArkheHeader
+        action_id: {type: string}
+        adjudicator_id: {type: string}
+        approve: {type: boolean}
+        justification: {type: string, min_length: 1}
+      response:
+        action_id: {type: string}
+        new_status:
+          type: string
+          enum: [APPROVED, REJECTED, ESCALATED]
+        temporal_event_id: {type: string}
+
+  messages:
+    Intention:
+      fields:
+        intention_id: {type: string}
+        stated_goal: {type: string}
+        action_type:
+          type: string
+          enum: [QUERY, TRANSACT, MODIFY, COMMUNICATE, EXECUTE]
+        target_substrate: {type: string}
+        parameters: {type: bytes}
+        urgency: {type: float, min: 0.0, max: 1.0}
+        required_approvals: {type: array, items: {type: string}}
+
+    Decision:
+      fields:
+        verdict:
+          type: string
+          enum: [APPROVED, REJECTED, PENDING_APPROVAL, QUARANTINED]
+        confidence: {type: float}
+        violations: {type: array, items: {type: string}}
+        assigned_executor: {type: string}
+
+  config:
+    deliberation_timeout_ms: 10000
+    pending_timeout_hours: 24
+    mythos_log_only: true
+    emergency_senior_count: 5
+    emergency_approval_threshold: 3

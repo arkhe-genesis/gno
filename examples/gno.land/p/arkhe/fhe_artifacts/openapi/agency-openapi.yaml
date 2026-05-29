@@ -1,0 +1,220 @@
+openapi: 3.1.0
+info:
+  title: ARKHE Agency API
+  version: 1.0.0
+  description: Orquestracao de decisoes e despacho de acoes
+servers:
+  - url: https://api.arkhe.cathedral/api/v1
+paths:
+  /agency/deliberate:
+    post:
+      operationId: deliberate
+      summary: Submete intencao para deliberacao
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                header:
+                  $ref: '#/components/schemas/ArkheHeader'
+                intention:
+                  $ref: '#/components/schemas/Intention'
+                epistemic_state_hash:
+                  type: string
+                  format: byte
+                include_mythos:
+                  type: boolean
+                  default: false
+      responses:
+        '200':
+          description: Deliberacao concluida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliberateResponse'
+
+  /agency/dispatch:
+    post:
+      operationId: dispatch
+      summary: Despacha acao aprovada
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                header:
+                  $ref: '#/components/schemas/ArkheHeader'
+                deliberation_id:
+                  type: string
+                adjudicator_id:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Acao despachada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DispatchResponse'
+
+  /agency/pending:
+    get:
+      operationId: listPending
+      summary: Lista acoes pendentes
+      parameters:
+        - name: filter_substrate
+          in: query
+          schema:
+            type: string
+        - name: since
+          in: query
+          schema:
+            type: integer
+            format: int64
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: Lista de acoes pendentes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  actions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PendingAction'
+
+  /agency/adjudicate:
+    post:
+      operationId: adjudicate
+      summary: Aprova ou rejeita acao pendente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [header, action_id, adjudicator_id, approve, justification]
+              properties:
+                header:
+                  $ref: '#/components/schemas/ArkheHeader'
+                action_id:
+                  type: string
+                adjudicator_id:
+                  type: string
+                approve:
+                  type: boolean
+                justification:
+                  type: string
+                  minLength: 1
+      responses:
+        '200':
+          description: Adjudicacao registrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  action_id:
+                    type: string
+                  new_status:
+                    type: string
+                    enum: [APPROVED, REJECTED, ESCALATED]
+                  temporal_event_id:
+                    type: string
+
+components:
+  schemas:
+    ArkheHeader:
+      $ref: './temporalchain-openapi.yaml#/components/schemas/ArkheHeader'
+
+    Intention:
+      type: object
+      properties:
+        intention_id:
+          type: string
+        stated_goal:
+          type: string
+        action_type:
+          type: string
+          enum: [QUERY, TRANSACT, MODIFY, COMMUNICATE, EXECUTE]
+        target_substrate:
+          type: string
+        parameters:
+          type: string
+          format: byte
+        urgency:
+          type: number
+          minimum: 0
+          maximum: 1
+        required_approvals:
+          type: array
+          items:
+            type: string
+
+    DeliberateResponse:
+      type: object
+      properties:
+        deliberation_id:
+          type: string
+        decision:
+          $ref: '#/components/schemas/Decision'
+        reasoning_steps:
+          type: array
+          items:
+            type: string
+        epistemic_state_hash:
+          type: string
+          format: byte
+
+    Decision:
+      type: object
+      properties:
+        verdict:
+          type: string
+          enum: [APPROVED, REJECTED, PENDING_APPROVAL, QUARANTINED]
+        confidence:
+          type: number
+        violations:
+          type: array
+          items:
+            type: string
+        assigned_executor:
+          type: string
+
+    DispatchResponse:
+      type: object
+      properties:
+        action_id:
+          type: string
+        status:
+          type: string
+          enum: [DISPATCHED, FAILED, TIMEOUT]
+        executor_ack:
+          type: string
+
+    PendingAction:
+      type: object
+      properties:
+        action_id:
+          type: string
+        intention:
+          $ref: '#/components/schemas/Intention'
+        deliberation_id:
+          type: string
+        pending_since_ns:
+          type: integer
+          format: int64
+        missing_approvals:
+          type: array
+          items:
+            type: string

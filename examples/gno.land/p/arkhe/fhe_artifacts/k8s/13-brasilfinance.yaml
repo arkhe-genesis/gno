@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: brasilfinance
+  namespace: arkhe-cathedral
+  labels:
+    app: brasilfinance
+    substrate: "261.1"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: brasilfinance
+  template:
+    metadata:
+      labels:
+        app: brasilfinance
+        substrate: "261.1"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+    spec:
+      containers:
+      - name: brasilfinance
+        image: arkhe-os/brasilfinance:v1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: grpc
+          containerPort: 50051
+        - name: rest
+          containerPort: 8080
+        - name: metrics
+          containerPort: 9090
+        env:
+        - name: RUST_LOG
+          value: "info"
+        - name: PIX_ENDPOINT
+          value: "https://pix.bcb.gov.br"
+        - name: ZK_CIRCUIT_ID
+          value: "pix_anon_v2"
+        - name: COMPLIANCE_ENGINES
+          value: "SMARTS,ACTIMIZE,BTCA,SAGE"
+        - name: MAX_AMOUNT_ZK_OPTIONAL
+          value: "1000.00"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+        volumeMounts:
+        - name: pix-mtls
+          mountPath: /etc/arkhe/certs
+          readOnly: true
+        - name: schemas
+          mountPath: /etc/arkhe/schemas
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      volumes:
+      - name: pix-mtls
+        secret:
+          secretName: arkhe-crypto-secrets
+          items:
+          - key: pix-mtls-cert
+            path: pix.pem
+      - name: schemas
+        configMap:
+          name: arkhe-schemas
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: brasilfinance
+  namespace: arkhe-cathedral
+spec:
+  selector:
+    app: brasilfinance
+  ports:
+  - name: grpc
+    port: 50051
+    targetPort: 50051
+  - name: rest
+    port: 8080
+    targetPort: 8080
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+  type: ClusterIP

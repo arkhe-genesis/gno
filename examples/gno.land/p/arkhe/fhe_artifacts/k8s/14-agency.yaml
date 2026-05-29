@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agency
+  namespace: arkhe-cathedral
+  labels:
+    app: agency
+    substrate: "891"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: agency
+  template:
+    metadata:
+      labels:
+        app: agency
+        substrate: "891"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+    spec:
+      containers:
+      - name: agency
+        image: arkhe-os/agency:v1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: grpc
+          containerPort: 50051
+        - name: rest
+          containerPort: 8080
+        - name: metrics
+          containerPort: 9090
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: DELIBERATION_TIMEOUT_MS
+          value: "10000"
+        - name: PENDING_TIMEOUT_HOURS
+          value: "24"
+        - name: EMERGENCY_SENIOR_COUNT
+          value: "5"
+        - name: EMERGENCY_APPROVAL_THRESHOLD
+          value: "3"
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "4000m"
+        volumeMounts:
+        - name: schemas
+          mountPath: /etc/arkhe/schemas
+      volumes:
+      - name: schemas
+        configMap:
+          name: arkhe-schemas
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agency
+  namespace: arkhe-cathedral
+spec:
+  selector:
+    app: agency
+  ports:
+  - name: grpc
+    port: 50051
+    targetPort: 50051
+  - name: rest
+    port: 8080
+    targetPort: 8080
+  type: ClusterIP

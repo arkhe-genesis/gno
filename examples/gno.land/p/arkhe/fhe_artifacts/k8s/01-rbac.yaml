@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: arkhe-cathedral-sa
+  namespace: arkhe-cathedral
+automountServiceAccountToken: false
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: arkhe-cathedral-role
+  namespace: arkhe-cathedral
+rules:
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: arkhe-cathedral-rb
+  namespace: arkhe-cathedral
+subjects:
+- kind: ServiceAccount
+  name: arkhe-cathedral-sa
+  namespace: arkhe-cathedral
+roleRef:
+  kind: Role
+  name: arkhe-cathedral-role
+  apiGroup: rbac.authorization.k8s.io

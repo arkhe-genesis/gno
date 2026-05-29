@@ -1,0 +1,85 @@
+apiVersion: arkhe.schemas/v1
+kind: SchemaBundle
+metadata:
+  name: fluxmem-v1
+  version: "1.0.0"
+  substrate: "933"
+  seal: "sha3-256:s9t0u1..."
+spec:
+  service: FluxMemService
+  rpcs:
+    WriteShard:
+      request:
+        header: ArkheHeader
+        node: MemoryNode
+        edges: {type: array, items: RelationEdge, nullable: true}
+        trigger_consolidation: {type: boolean, default: false}
+      response:
+        node_id: {type: string}
+        temporal_event_id: {type: string, nullable: true}
+        edges_created: {type: integer}
+
+    QueryGraph:
+      request:
+        header: ArkheHeader
+        query_type:
+          oneOf:
+            - embedding_query: {type: bytes}
+            - text_query: {type: string}
+            - node_id_query: {type: string}
+        node_type_filter: {type: string, nullable: true}
+        depth: {type: integer, default: 2, min: 1, max: 5}
+        limit: {type: integer, default: 100, max: 1000}
+        include_provenance: {type: boolean, default: false}
+      response:
+        nodes: {type: array, items: MemoryNode}
+        edges: {type: array, items: RelationEdge}
+        query_latency_ms: {type: float}
+
+    Consolidate:
+      request:
+        header: ArkheHeader
+        scope:
+          type: string
+          enum: [SESSION, AGENT, SUBSTRATE, FULL]
+        target_node_id: {type: string, nullable: true}
+        strategy:
+          type: string
+          enum: [MERGE, FORGET, GENERALIZE, REFINE]
+      response:
+        nodes_merged: {type: integer}
+        nodes_forgotten: {type: integer}
+        nodes_generalized: {type: integer}
+        report_id: {type: string}
+
+  messages:
+    MemoryNode:
+      fields:
+        node_id: {type: string}
+        node_type:
+          type: string
+          enum: [EPISODIC, SEMANTIC, PROCEDURAL, ONTOLOGICAL]
+        embedding: {type: bytes}
+        payload: {type: bytes, max_size: 102400}
+        tags: {type: array, items: {type: string}}
+        created_at_ns: {type: integer, format: int64}
+        last_accessed_ns: {type: integer, format: int64}
+        access_count: {type: integer}
+        consolidation_score: {type: float}
+
+    RelationEdge:
+      fields:
+        edge_id: {type: string}
+        from_node: {type: string}
+        to_node: {type: string}
+        relation_type:
+          type: string
+          enum: [CAUSAL, TEMPORAL, SIMILAR, CONTRADICTS]
+        weight: {type: float}
+
+  config:
+    vector_dimension: 1536
+    vector_db: "qdrant"
+    graph_db: "neo4j"
+    consolidation_threshold: 1000
+    retention_immutable: true

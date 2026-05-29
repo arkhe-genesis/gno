@@ -1,0 +1,55 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: arkhe-api-gateway
+  namespace: arkhe-cathedral
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rate-limit: "1000"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - api.arkhe.cathedral
+    secretName: arkhe-api-tls
+  rules:
+  - host: api.arkhe.cathedral
+    http:
+      paths:
+      - path: /arkhe.temporalchain.v1
+        pathType: Prefix
+        backend:
+          service:
+            name: temporalchain
+            port:
+              number: 50051
+      - path: /arkhe.hermeszk.v1
+        pathType: Prefix
+        backend:
+          service:
+            name: hermeszk
+            port:
+              number: 50051
+      - path: /arkhe.brasilfinance.v1
+        pathType: Prefix
+        backend:
+          service:
+            name: brasilfinance
+            port:
+              number: 50051
+      - path: /arkhe.agency.v1
+        pathType: Prefix
+        backend:
+          service:
+            name: agency
+            port:
+              number: 50051
+      - path: /api/v1
+        pathType: Prefix
+        backend:
+          service:
+            name: brasilfinance
+            port:
+              number: 8080

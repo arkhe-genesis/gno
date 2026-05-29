@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: arkhe-cathedral
+  labels:
+    app.kubernetes.io/name: arkhe-cathedral
+    app.kubernetes.io/version: "3.3.0"
+    arkhe.io/plane: code
+    arkhe.io/constitution: "P1-P7"

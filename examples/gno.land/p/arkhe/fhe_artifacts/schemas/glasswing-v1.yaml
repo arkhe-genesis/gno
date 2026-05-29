@@ -1,0 +1,75 @@
+apiVersion: arkhe.schemas/v1
+kind: SchemaBundle
+metadata:
+  name: glasswing-v1
+  version: "1.0.0"
+  substrate: "944"
+  seal: "sha3-256:b8c9d0..."
+spec:
+  service: GlasswingService
+  rpcs:
+    ScanArtifact:
+      request:
+        header: ArkheHeader
+        artifact: ArtifactSpec
+        scanner_types:
+          type: array
+          items:
+            type: string
+            enum: [SAST, DAST, IAC, SECRETS, DEPENDENCY, CONFIG]
+        block_on_critical: {type: boolean, default: true}
+      response:
+        scan_id: {type: string}
+        status:
+          type: string
+          enum: [QUEUED, RUNNING, COMPLETED_CLEAN, COMPLETED_WITH_FINDINGS, BLOCKED]
+        findings: {type: array, items: Finding}
+        temporal_event_id: {type: string}
+
+    QueryFindings:
+      request:
+        artifact_id: {type: string, nullable: true}
+        severity_filter: {type: string, nullable: true}
+        status_filter: {type: string, nullable: true}
+        since_ns: {type: integer, format: int64}
+        limit: {type: integer, default: 100}
+      response:
+        findings: {type: array, items: Finding}
+        summary: Summary
+
+    StreamAlerts:
+      request:
+        severity_threshold: {type: string, nullable: true}
+      response:
+        stream: true
+        type: Alert
+
+  messages:
+    Finding:
+      fields:
+        finding_id: {type: string}
+        scanner_type: {type: string}
+        severity:
+          type: string
+          enum: [CRITICAL, HIGH, MEDIUM, LOW, INFO]
+        rule_id: {type: string}
+        description: {type: string}
+        file_path: {type: string}
+        line_number: {type: integer}
+        remediation_hint: {type: bytes}
+        cve_id: {type: string, nullable: true}
+
+    Summary:
+      fields:
+        critical_count: {type: integer}
+        high_count: {type: integer}
+        medium_count: {type: integer}
+        low_count: {type: integer}
+        mean_time_to_mitigate_hours: {type: float}
+
+  config:
+    sast_timeout_sec: 300
+    dast_timeout_sec: 120
+    alert_stream_latency_ms: 1000
+    block_on_critical_default: true
+    secret_scan_patterns: [AWS_KEY, PRIVATE_KEY, API_TOKEN, PASSWORD]
