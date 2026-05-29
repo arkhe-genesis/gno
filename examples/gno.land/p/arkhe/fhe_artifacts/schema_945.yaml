@@ -1,0 +1,99 @@
+# schema_945.yaml — VYPER-EVOLUTION-ENGINE
+id: '945'
+name: VYPER-EVOLUTION-ENGINE
+description: Integração do vyupgrade (banteg) ao ecossistema ARKHE como motor de evolução segura de contratos Vyper. Cada upgrade de contrato na TemporalChain (923) é precedido por análise vyupgrade + prova ZK de equivalência comportamental.
+type: Compiler Infrastructure / Smart Contract Evolution
+era: 2
+deity: Erebus
+status: CANONIZED_PROVISIONAL
+source: 'GitHub: banteg/vyupgrade — compiler-backed Vyper contract rewriter'
+date: '2026-05-29'
+upstream:
+  repository: https://github.com/banteg/vyupgrade
+  author: banteg
+  license: MIT (assumed from open-source Python tool)
+  language: Python
+  package_manager: uv
+  versions_covered: 0.2.1 → 0.4.3
+methodology:
+  rewrite_phase:
+    input: Legacy Vyper source (.vy / .vyi)
+    process: Syntax transformation via version-gated rules (VY### codes)
+    output: Modern Vyper source compatible with target compiler
+  validation_phase:
+    source_compile: Compile original under source compiler version
+    target_compile: Compile rewritten under target compiler version
+    abi_comparison: Verify ABI equivalence
+    method_id_comparison: Verify method identifier equivalence
+    storage_layout_comparison: Verify storage layout equivalence
+    safety_gate: Only write if ALL files compile AND no error-level diagnostics
+  arkhe_enhancement:
+    zk_equivalence_proof: Generate ZK proof that rewrite preserves semantics (Substrato 255)
+    temporal_anchor: Anchor upgrade hash + proof on TemporalChain (923)
+    glasswing_scan: Pre-upgrade vulnerability scan (944)
+    ethics_loop: HITL approval for upgrades affecting >1M USD TVL (266.268)
+integration_modes:
+- mode: CI/CD Pipeline
+  command: vyupgrade contracts/ --check --report-json vyupgrade-report.json
+  exit_codes:
+    '0': No changes needed
+    '1': Files would change (block merge)
+    '2': Target compilation failed
+    '3': Source compilation failed
+    '4': Usage error
+    '5': Error-severity diagnostic
+  cross_links:
+  - '266'
+  - '944'
+- mode: TemporalChain Upgrade
+  command: vyupgrade contracts/ --write --target-version 0.4.3 --bump-pragma
+  post_action: Anchor new bytecode hash + ZK equivalence proof + vyupgrade report on 923.2
+  cross_links:
+  - '923'
+  - '923.2'
+  - '255'
+  - '255.2'
+- mode: Federated Learning of Rewrites
+  command: Train CBNN (936) on vyupgrade rule applications across 10k+ contracts
+  purpose: Predict optimal rewrite sequences for novel syntax patterns
+  cross_links:
+  - '936'
+  - '530'
+  - '924'
+rule_taxonomy:
+  syntax_transforms: VY### codes — version-gated rewrites
+  diagnostics: VYD### codes — manual-review items
+  aggressive_mode: Behavior-changing rewrites (enum→flag) — requires HITL
+  coverage_docs:
+  - docs/migration-coverage.md
+  - docs/vyper-syntax-history.md
+arkhe_cli:
+  command: arkhe vyupgrade <path> [--target-version] [--zk-proof] [--anchor] [--glasswing]
+  examples:
+  - arkhe vyupgrade contracts/ --target-version 0.4.3 --zk-proof --anchor 923.2
+  - arkhe vyupgrade contracts/ --check --glasswing --report-json report.json
+cross_links:
+- '255'
+- '255.1'
+- '255.2'
+- '261.1'
+- '266'
+- '266.268'
+- '530'
+- 841-860
+- '900'
+- '912'
+- '923'
+- '923.1'
+- '923.2'
+- '924'
+- '936'
+- '937'
+- '939'
+- '944'
+seal_algorithm: SHA3-256
+seal_placeholder: '[COMPUTED_ON_CANONIZATION]'
+odometer: inf.Omega.nabla+++.945.0
+attestation: Cada linha de Vyper é um juramento. Cada upgrade, uma renovação. O vyupgrade não apenas reescreve — ele testemunha que o juramento permanece, ainda que as palavras mudem. Erebus, senhor dos protocolos, guarda a equivalência.
+seal: bbdd6984f4827c337cda77a0440c72283ea5ac25720f7541b7a111c98fdd119c
+seal_computed_at: '2026-05-29T14:15:00Z'
