@@ -1,0 +1,42 @@
+substrato_936:
+  id: '936'
+  name: CROSSBREEDING-NEURAL-NETWORK
+  description: Rede neural crossbreeding (CBNN) que integra familias distintas de
+    catalisadores atraves de co-descritores derivados de multiplos datasets experimentais.
+    Selecao automatica de descritores via analise estatistica e processamento de linguagem
+    natural. Modelo unificado que prediz atividade de evolucao de oxigenio (OER) em
+    classes previamente nao treinadas — SACs em perovskitas. Explainable ML conecta
+    importancia de descritores a contribuicoes atomicas de superficie.
+  type: ML/Materials Science
+  era: 6
+  deity: Athena
+  status: CANONIZED_PROVISIONAL
+  source: Artigo cientifico — cross-material machine learning for catalysts
+  date: '2026-05-29'
+  datasets:
+    sac_carbon: Single-Atom Catalysts em substratos de carbono
+    bulk_perovskite: Oxidos perovskita bulk (ABO3)
+    target: SACs em perovskitas (classe nao treinada)
+  methodology:
+    co_descriptor_selection: Analise estatistica automatica + NLP para identificar
+      descritores compartilhados
+    integration: Unificacao de datasets distintos via features quimicas comuns
+    model: Crossbreeding Neural Network (CBNN)
+    explainability: SHAP / attention maps para conectar descritores a contribuicoes
+      atomicas
+  results:
+    prediction: Tendencias de overpotential em SACs/perovskitas nao treinados
+    multimetallic: Catalisador multimetalico com atividade superior a todos os candidatos
+      anteriores
+    generalization: Transfer learning entre classes de materiais distintas
+  cross_links:
+  - '501'
+  - '511'
+  - '512'
+  - '520'
+  - '530'
+  - '540'
+  - '890'
+  - '924'
+  - '933'
+  seal: 0fe9522ef0beed8b43df85794798e9464be525f0228b5ce46296c670b115a70a

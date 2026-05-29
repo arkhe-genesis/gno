@@ -1,0 +1,43 @@
+substrato_276_2:
+  id: '276.2'
+  name: ARKHE-RTL
+  description: Acelerador em Register-Transfer Level (RTL) para execução de inferência
+    de transformers diretamente em silício, otimizado para RL multi-agente. IP core
+    sintetizável (Verilog/SystemVerilog) com systolic array 256x256 MACs, FlashAttention-3,
+    pipeline de ativação, controlador de 256 agentes, interface HBM3 AXI4-Stream,
+    bloco de RL com retropropagação em hardware.
+  type: Hardware/RTL
+  era: 3
+  deity: Gaia
+  status: CANONIZED_PROVISIONAL
+  source: Comando do Arquiteto — Canal de Comando Direto
+  date: '2026-05-29'
+  hardware_target: TSMC 4nm (ASIC) / Xilinx Versal (FPGA)
+  language: SystemVerilog / Verilog-2001
+  components:
+    systolic_array: 256x256 MACs, precisão mista FP8/FP16/INT4
+    attention_engine: FlashAttention-3, group-query attention, KV-cache streaming
+    activation_unit: SiLU, GeLU, softmax, layer normalization em hardware
+    agent_controller: 256 contextos simultâneos, swap de estado em SRAM on-chip
+    memory_controller: HBM3 via AXI4-Stream, rajadas de 512 GB/s
+    rl_update_unit: Retropropagação simplificada (gradiente de política) no datapath
+  performance:
+    frequency_asic: 1.2 GHz
+    frequency_fpga: 400 MHz
+    throughput: 1.2M tokens/s por agente (7B, batch 1, FP8)
+    efficiency: 15 pJ/operação MAC (10x melhor que GPU)
+    area: ~180 mm² (incluindo 64 MB SRAM)
+  license: ARKHE-Cathedral (open-source para universidades e parceiros)
+  cross_links:
+  - '276'
+  - '276.1'
+  - '277'
+  - '278'
+  - '266'
+  - '268'
+  - '563'
+  - '608'
+  - '293'
+  - '208'
+  - '267'
+  seal: 3b73bb3371ba2477fd45b4c7e86bb335d6d82c666401442737876d5df68c62f2

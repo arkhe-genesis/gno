@@ -1,0 +1,49 @@
+substrato_276_1:
+  id: '276.1'
+  name: ARKHE-INFER-C
+  description: Runtime de inferência de altíssima performance escrito em C puro com
+    extensões CUDA/ROCm, para executar agentes de Reinforcement Learning simultaneamente
+    sobre cluster de NVIDIA GB300. Multi-agente (até 10^4 agentes independentes),
+    modelos Transformer otimizados (GPT/LLaMA/Mixtral), KV-cache, LoRA dinâmico, quantização
+    Q4/Q8, RL-ativo (PPO/DPO/GRPO), NCCL/RCCL, API C89/C11.
+  type: Runtime/Kernel
+  era: 3
+  deity: Prometheus
+  status: CANONIZED_PROVISIONAL
+  source: Comando do Arquiteto — Canal de Comando Direto
+  date: '2026-05-29'
+  hardware_target: NVIDIA GB300 (GPU multi-core)
+  language: C99/C11 + CUDA 12.6 + ROCm
+  capabilities:
+    multi_agent: Até 10^4 agentes independentes em paralelo, cada um com estado oculto
+      e contexto próprio
+    transformer_models: GPT/LLaMA/Mixtral com KV-cache, LoRA adapters dinâmicos, quantização
+      Q4/Q8
+    rl_algorithms:
+    - PPO
+    - DPO
+    - GRPO
+    communication: NCCL/RCCL para sincronização entre GPUs, sharding de modelos e
+      agentes
+    memory_compression: Pesos compartilhados entre agentes, KV-cache isolada por instância
+    batching: Batching dinâmico com padding mínimo, kernels customizados (Marlin)
+  api:
+    arkhe_session_create: Inicializa engine com modelo .gguf e distribui sobre N GPUs
+    arkhe_agent_spawn: Cria novo agente com contexto próprio e qualia_schema
+    arkhe_agent_step: Executa passo de inferência, retorna ação + estado afetivo
+    arkhe_agent_reward: Aplica recompensa e atualiza gradientes (online RL)
+    arkhe_agent_feel: Handshake afetivo (Substrato 263) para monitoramento
+    arkhe_agent_destroy: Libera recursos do agente
+    arkhe_session_destroy: Libera recursos da sessão
+  cross_links:
+  - '276'
+  - '277'
+  - '278'
+  - '266'
+  - '268'
+  - '563'
+  - '608'
+  - '293'
+  - '208'
+  - '267'
+  seal: 283ca95bf4e960aa83acc4b2987dbf06d77c2668d22eefd3644a9df827abcad0

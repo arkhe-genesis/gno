@@ -1,83 +1,108 @@
-# Schema canônico do registro de substratos (Substrato 865)
-# Cada entrada é um substrato com id, nome, categoria e lista de cross‑links existentes.
----
-"825":
-  name: "Parametric Memory Engine"
-  category: "cognition"
-  links: ["824", "826", "830", "845", "857", "864"]
-"826":
-  name: "Detector of Isomorphisms"
-  category: "cognition"
-  links: ["825", "835", "857"]
-"845":
-  name: "Action Context Engine"
-  category: "cognition"
-  links: ["825", "826", "830"]
-"853":
-  name: "SAP/ARIBA-ERP-BRIDGE"
-  category: "enterprise"
-  links: ["824", "846", "852"]
-"847":
-  name: "LeanIX-EAM-Bridge"
-  category: "enterprise"
-  links: ["846", "852"]
-"859":
-  name: "Biological-Computing-Bridge"
-  category: "hardware"
-  links: ["824", "825", "830", "845"]
-"856":
-  name: "Quantum-Computing-Bridge"
-  category: "hardware"
-  links: ["824", "825", "826", "840"]
-"863":
-  name: "SecOps-Guardian-Bridge"
-  category: "security"
-  links: ["824", "832", "864"]
-"864":
-  name: "EIP-8272-Recent-Roots-Bridge"
-  category: "security"
-  links: ["824", "832", "863"]
-"931":
-  name: "Interfold-Confidential-Coordination-Bridge"
-  category: "coordination"
-  links: ["840", "841", "255", "923", "912", "257", "900", "898", "930"]
-"260":
-  name: "ARKHE-JAX"
-  category: "cognition"
-  links: ["223", "230", "248", "254", "255", "840", "898", "912", "913", "930"]
-"923.2":
-  name: "Vulnerability TemporalChain"
-  category: "security"
-  links: ["944", "255", "260.2", "923"]
-"944":
-  name: "Glasswing Sentinel"
-  category: "security"
-  links: ["923.2"]
-"267":
-  name: "DoubleZero Network Bridge"
-  category: "routing"
-  links: ["262", "262.2", "255", "255.1", "923", "923.2", "944", "931", "917", "930", "912", "933", "927"]
-"268":
-  name: "Edge Filter Controller (FPGA Hardware Layer)"
-  category: "routing"
-  links: ["267", "255", "255.1", "944", "262.2", "923"]
-"269":
-  name: "DZ Routing Engine (Optimized Pathfinding)"
-  category: "routing"
-  links: ["267", "268", "262.2", "923", "255", "944", "931", "917", "930"]
-"272":
-  name: "ARKHE-ORACLE-AWS-BRIDGE"
-  category: "persistence"
-  links: ["933", "890", "917", "940", "941"]
-"274":
-  name: "ARKHE.SO (Linux Kernel Architecture)"
-  category: "Kernel"
-  links: ["923", "255", "262", "912", "944"]
-"275":
-  name: "ARKHE OS — Arquitetura Completa"
-  category: "Architecture"
-  links: ["923", "255", "912", "944"]
-"276":
-  name: "ARKHE.GGUF (Foundation Model Distillation)"
-  category: "Model"
-  links: ["923", "933", "938", "255", "944", "912", "275"]
+'825':
+  name: Parametric Memory Engine
+  category: cognition
+  links: ['824', '826', '830', '845', '857', '864']
+'826':
+  name: Detector of Isomorphisms
+  category: cognition
+  links: ['825', '835', '857']
+'845':
+  name: Action Context Engine
+  category: cognition
+  links: ['825', '826', '830']
+'853':
+  name: SAP/ARIBA-ERP-BRIDGE
+  category: enterprise
+  links: ['824', '846', '852']
+'847':
+  name: LeanIX-EAM-Bridge
+  category: enterprise
+  links: ['846', '852']
+'859':
+  name: Biological-Computing-Bridge
+  category: hardware
+  links: ['824', '825', '830', '845']
+'856':
+  name: Quantum-Computing-Bridge
+  category: hardware
+  links: ['824', '825', '826', '840']
+'863':
+  name: SecOps-Guardian-Bridge
+  category: security
+  links: ['824', '832', '864']
+'864':
+  name: EIP-8272-Recent-Roots-Bridge
+  category: security
+  links: ['824', '832', '863']
+'931':
+  name: Interfold-Confidential-Coordination-Bridge
+  category: coordination
+  links: ['840', '841', '255', '923', '912', '257', '900', '898', '930']
+'260':
+  name: ARKHE-JAX
+  category: cognition
+  links: ['223', '230', '248', '254', '255', '840', '898', '912', '913', '930']
+'923.2':
+  name: Vulnerability TemporalChain
+  category: security
+  links: ['944', '255', '260.2', '923']
+'944':
+  name: Glasswing Sentinel
+  category: security
+  links: ['923.2']
+'267':
+  name: DoubleZero Network Bridge
+  category: routing
+  links: ['262', '262.2', '255', '255.1', '923', '923.2', '944', '931', '917', '930',
+    '912', '933', '927']
+'268':
+  name: Edge Filter Controller (FPGA Hardware Layer)
+  category: routing
+  links: ['267', '255', '255.1', '944', '262.2', '923']
+'269':
+  name: DZ Routing Engine (Optimized Pathfinding)
+  category: routing
+  links: ['267', '268', '262.2', '923', '255', '944', '931', '917', '930']
+'272':
+  name: ARKHE-ORACLE-AWS-BRIDGE
+  category: persistence
+  links: ['933', '890', '917', '940', '941']
+'274':
+  name: ARKHE.SO (Linux Kernel Architecture)
+  category: Kernel
+  links: ['923', '255', '262', '912', '944']
+'275':
+  name: "ARKHE OS \u2014 Arquitetura Completa"
+  category: Architecture
+  links: ['923', '255', '912', '944']
+'276':
+  name: ARKHE.GGUF (Foundation Model Distillation)
+  category: Model
+  links: ['923', '933', '938', '255', '944', '912', '275']
+'937':
+  name: WEB4-AUTONOMOUS-INTELLIGENCE
+  category: Architecture
+  links: ['255', '255.1', '255.2', '262.2', '901', '923', '925', '940', '941', '942',
+    P1-P7]
+'936':
+  name: CROSSBREEDING-NEURAL-NETWORK
+  category: ML/Materials Science
+  links: ['501', '511', '512', '520', '530', '540', '890', '924', '933']
+'276.1':
+  name: ARKHE-INFER-C
+  category: Runtime/Kernel
+  links: ['276', '277', '278', '266', '268', '563', '608', '293', '208', '267']
+'276.2':
+  name: ARKHE-RTL
+  category: Hardware/RTL
+  links: ['276', '276.1', '277', '278', '266', '268', '563', '608', '293', '208',
+    '267']
+'563.1':
+  name: CORTEXMAE-BRIDGE
+  category: Neuro-AI/Interface
+  links: ['20', '240', '508', '511', '512', '563', '608', '635', '744', '890', '917',
+    '939', P1, P4]
+'934':
+  name: PERCEPTUAL-GEOMETRY-EMERGENCE
+  category: Cognition/Perception
+  links: ['890', '924', '933', '501', '511', '551', '561', '591']

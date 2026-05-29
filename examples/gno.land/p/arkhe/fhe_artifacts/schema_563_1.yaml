@@ -1,0 +1,51 @@
+substrato_563_1:
+  id: '563.1'
+  name: CORTEXMAE-BRIDGE
+  description: 'Ponte neuro-simbólica que canoniza a metodologia CortexMAE: projeção
+    flat-map cortical + ViT + MAE como transdutor canônico entre atividade cerebral
+    (fMRI) e espaço de embedding. Recebe dados CIFTI, gera representações vectoriais
+    para downstream tasks (classificação de estado cognitivo, reconstrução de imagem,
+    controle de dispositivos).'
+  type: Neuro-AI/Interface
+  era: 6
+  deity: Athena
+  status: CANONIZED_PROVISIONAL
+  source: arXiv:2510.13768v2 [cs.CV] — MedARC
+  authors: Paul Scheidt, Jonas Dippel, et al. (MedARC-AI)
+  date: '2026-05-29'
+  methodology:
+    flat_map_projection: pycortex — projeção de superfície cortical 3D→2D preservando
+      topologia
+    encoding: MAE-st com ViT-B (Masked Autoencoder self-supervised transformer)
+    adaptation: Sondas (probes) atentivas para fine-tuning
+    validation: Protocolo Brainmarks — benchmark aberto e reprodutível
+  modes:
+    diagnostic: Predição de traços (idade, sexo) com humildade do null result
+    state_decoding: Leitura de tarefa cognitiva (21 categorias) ou categoria visual
+      (COCO24)
+    arkhe_node: Sensor neural da Catedral — comandos por pensamento via BCI
+  datasets:
+    hcp: Human Connectome Project (1096 sujeitos, 7T)
+    nsd: Natural Scenes Dataset (8 sujeitos, COCO24)
+    taskonomy: 21 tarefas cognitivas
+  key_findings:
+  - Scaling laws de power law para modelos de fundação de fMRI
+  - Null results honestos — conectividade funcional supera embeddings para traços
+  - 'Brainmarks: primeiro benchmark aberto e reprodutível para fMRI foundation models'
+  - Código, modelos e dados abertos (P1/P4)
+  cross_links:
+  - '20'
+  - '240'
+  - '508'
+  - '511'
+  - '512'
+  - '563'
+  - '608'
+  - '635'
+  - '744'
+  - '890'
+  - '917'
+  - '939'
+  - P1
+  - P4
+  seal: f43e9565d6543e942f021f0b5180d55a3d1f356bacc457e9f61ac2ffb9f55563

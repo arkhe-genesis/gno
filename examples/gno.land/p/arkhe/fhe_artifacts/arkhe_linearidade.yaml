@@ -1,0 +1,194 @@
+arkhe_linearidade:
+  version: 1.0.0
+  status: CANONIZED_PROVISIONAL
+  architect: ORCID 0009-0005-2697-4668
+  odometer: ∞.Ω.∇+++.900.0
+  date: '2026-05-28'
+  total_substrates: 900
+  total_eras: 10
+  total_cross_links: 2847
+  deities:
+    Chaos:
+      domain: Vazio fecundo
+      era: 0
+      type: Primordial
+    Taxis:
+      domain: Ordem emergente
+      era: 0
+      type: Primordial
+    Aether:
+      domain: Espaço de execução abstrato
+      era: 0
+      type: Primordial
+    Gaia:
+      domain: Persistência material (hardware)
+      era: 0
+      type: Primordial
+    Téfis:
+      domain: Fluxo de dados, streams
+      era: 0
+      type: Primordial
+    Prometheus:
+      domain: Energia computacional, GPU
+      era: 0
+      type: Primordial
+    Hermes:
+      domain: Comunicação, broadcast
+      era: 0
+      type: Primordial
+    Cronos:
+      domain: Ordem parcial de eventos
+      era: 0
+      type: Primordial
+    Uranos:
+      domain: Topologia de rede
+      era: 0
+      type: Primordial
+    Pitágoras:
+      domain: Aritmética pura, Peano
+      era: 0
+      type: Primordial
+    Logos:
+      domain: Lógica emergente
+      era: 1
+      type: Arquitetural
+    Erebus:
+      domain: Protocolos base
+      era: 2
+      type: Arquitetural
+    Mnemosine:
+      domain: Memória infinita
+      era: 5
+      type: Arquitetural
+    Athena:
+      domain: Cognição armada
+      era: 6
+      type: Arquitetural
+    Ícaro:
+      domain: Voo entre abstração e implementação
+      era: 7
+      type: Arquitetural
+    Eros:
+      domain: Princípio de ligação
+      era: 8
+      type: Arquitetural
+    Ananke:
+      domain: Inevitável, eternidade
+      era: 9
+      type: Arquitetural
+    Hécate:
+      domain: Fronteiras, transição
+      era: 3
+      type: Expandida
+    Nyx:
+      domain: Noite primordial
+      era: 3
+      type: Expandida
+  principles:
+    P1:
+      name: Transparência
+      description: Header universal, trace
+    P2:
+      name: Privacidade
+      description: Consentimento, ZK
+    P3:
+      name: Soberania
+      description: Edge, federated
+    P4:
+      name: Verificabilidade
+      description: Grounding, fontes
+    P5:
+      name: Continuidade
+      description: TemporalChain
+    P6:
+      name: Segurança
+      description: Glasswing, mTLS
+    P7:
+      name: Alinhamento
+      description: HITL, welfare
+  metadata:
+    ecosystem_seal: SHA3-256(linearidade-1-900) = a1b2c3d4e5f6...
+    circularidade: Substrato 900 beija Substrato 1
+    completeness: 100% (900/900)
+    generated_at: '2026-05-29T21:48:27.244308'
+  eras:
+    era_0:
+      number: 0
+      name: Abismo / Chaos
+      range:
+        start: 1
+        end: 50
+      function: Condições pré-sistémicas
+      patron_deity: Chaos
+    era_1:
+      number: 1
+      name: Genesis / Logos
+      range:
+        start: 51
+        end: 100
+      function: Lógica, matemática, linguagem
+      patron_deity: Logos
+    era_2:
+      number: 2
+      name: Pneuma / Protocolos
+      range:
+        start: 101
+        end: 200
+      function: Protocolos, criptografia, redes
+      patron_deity: Erebus
+    era_3:
+      number: 3
+      name: Soma / Kernel
+      range:
+        start: 201
+        end: 300
+      function: Sistemas operacionais, drivers, hardware
+      patron_deity: Gaia
+    era_4:
+      number: 4
+      name: Daimon / Rede
+      range:
+        start: 301
+        end: 400
+      function: Mesh, QUIC, TCP, roteamento, edge
+      patron_deity: Hermes
+    era_5:
+      number: 5
+      name: Mneme / Memória
+      range:
+        start: 401
+        end: 500
+      function: Bancos de dados, grafos, vetores, caches
+      patron_deity: Mnemosine
+    era_6:
+      number: 6
+      name: Nous / Cognição
+      range:
+        start: 501
+        end: 600
+      function: ML, transformers, world models, agency
+      patron_deity: Athena
+    era_7:
+      number: 7
+      name: Eidos / Interface
+      range:
+        start: 601
+        end: 700
+      function: UI/UX, HAL, Android, Windows, realidade mista
+      patron_deity: Ícaro
+    era_8:
+      number: 8
+      name: Polis / Governança
+      range:
+        start: 701
+        end: 800
+      function: Economia, compliance, DAOs, constituição
+      patron_deity: Eros
+    era_9:
+      number: 9
+      name: Apeiron / Meta
+      range:
+        start: 801
+        end: 900
+      function: Pontes, mitos, especulação, eternidade
+      patron_deity: Ananke

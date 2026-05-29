@@ -1,0 +1,75 @@
+substrato_934:
+  id: '934'
+  name: PERCEPTUAL-GEOMETRY-EMERGENCE
+  description: 'Geometria de domínios perceptuais humanos emerge transientemente nas
+    representações de LLMs. Codificação transitória: fraca nas camadas iniciais, organizada
+    nas intermediárias, atenuada nas finais. Domínios: cor (manifold circular), pitch
+    (arco contínuo), emoção (valence-arousal), taste (manifold organizado).'
+  type: Cognição/Percepção
+  era: 6
+  deity: Athena
+  status: CANONIZED_PROVISIONAL
+  source: arXiv:2605.27970v1 [cs.AI]
+  authors: Simardeep Singh, Paras Chopra
+  date: '2026-05-27'
+  methodology:
+    embedding_extraction: Last-token hidden states from transformer layers
+    dimensionality_reduction: MDS (Multidimensional Scaling)
+    alignment_metrics:
+    - RSA (Spearman rank correlation)
+    - GPA (Generalized Procrustes Analysis)
+    validation: Bootstrap confidence intervals (1000 iterations, 95% percentile)
+  domains:
+    color:
+      geometry: Circular manifold (color wheel)
+      peak_layer: Early-middle layers
+      stability: Transient, attenuates in late layers
+      models:
+      - LLaMA-3-8B
+      - LLaMA-3.2-3B
+      - Gemma-7B
+      - Qwen-3-4B
+    emotion:
+      geometry: Valence-arousal structure (circumplex)
+      peak_layer: Middle layers
+      stability: Persistent through late layers
+      models:
+      - Gemma-7B
+      - LLaMA-3-8B
+      - Qwen-3-4B
+    pitch:
+      geometry: Arc-like continuous ordinal manifold
+      peak_layer: Intermediate layers
+      stability: Progressive deformation in late layers
+      models:
+      - Qwen-3-4B
+      - Gemma-7B
+      - LLaMA-3-8B
+    taste:
+      geometry: Organized taste manifold
+      peak_layer: Early layers
+      stability: Rapid degradation, noisy trajectory
+      models:
+      - Gemma-7B
+      - LLaMA-3-8B
+      - Qwen-3-4B
+  key_findings:
+  - Perceptual geometry emerges without direct perceptual supervision
+  - Distinct emergence profiles per domain and model
+  - 'Consistent trajectory: weak → organized → attenuated across depth'
+  - Simpler structures (taste) peak earlier than complex ones (emotion)
+  cross_links:
+  - '890'
+  - '924'
+  - '933'
+  - '501'
+  - '511'
+  - '551'
+  - '561'
+  - '591'
+  arkhe_implications:
+    world_model_v3: Valida estrutura geométrica de modelos internos
+    substrate_attention: Confirma atenção substrate-aware do Substrato 924
+    memory_hierarchy: Alinha com teoria de memória transitória L0-L9 (Substrato 491-500)
+    interpretability: Fornece framework mecanicista para análise de representações
+  seal: 2c8649f4f6fe9b74b65628857c4e65dcd205d1c85e4fd25c2ea9b034818fdd18
