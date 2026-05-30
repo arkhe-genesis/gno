@@ -17,14 +17,9 @@ from typing import Dict, Optional, List, Any
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone
 from enum import Enum
+
 import aiohttp
 
-from cryptography.hazmat.primitives.asymmetric import ed25519
-import base64
-
-# Global Ed25519 Key Pair for Cathedral (TemporalChain anchoring)
-# In production, this would be loaded from a secure vault.
-_CATHEDRAL_PRIVATE_KEY = ed25519.Ed25519PrivateKey.generate()
 
 # ═══════════════════════════════════════════════════════════════════
 # Configuração de ambiente
@@ -72,7 +67,6 @@ class HumanityProof:
     timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     seal: str = ""
     temporal_anchor: Optional[str] = None  # Ref. TemporalChain (923)
-    signature: str = ""
 
     def compute_seal(self) -> str:
         """Gera seal SHA3-256 canônico."""
@@ -85,16 +79,7 @@ class HumanityProof:
             "timestamp": self.timestamp,
         }
         json_str = json.dumps(payload, sort_keys=True, ensure_ascii=False)
-        seal_hash = hashlib.sha3_256(json_str.encode()).hexdigest()[:16].upper()
-        self.seal = f"HP-{seal_hash}"
-
-        # Ed25519 signature
-        signature_bytes = _CATHEDRAL_PRIVATE_KEY.sign(json_str.encode())
-        self.signature = base64.b64encode(signature_bytes).decode('utf-8')
-
-        # Temporal Anchor
-        self.temporal_anchor = f"923-resp-{seal_hash}"
-
+        self.seal = f"HP-{hashlib.sha3_256(json_str.encode()).hexdigest()[:16].upper()}"
         return self.seal
 
     def to_dict(self) -> Dict[str, Any]:
@@ -134,12 +119,9 @@ class PassportGateway:
         self._session = session
         self._owned_session = session is None
 
-        # Distributed cache mapping address -> {'timestamp': float, 'proof': HumanityProof}
-        self.cache: Dict[str, dict] = {}
-
     @property
     def session(self) -> aiohttp.ClientSession:
-        if getattr(self, "_session", None) is None:
+        if self._session is None or self._session.closed:
             headers = {}
             if self.api_key:
                 headers["X-API-Key"] = self.api_key
@@ -158,10 +140,6 @@ class PassportGateway:
         if self._owned_session and self._session and not self._session.closed:
             await self._session.close()
             self._session = None
-
-    def _publish_to_ipfs_nostr(self, proof: HumanityProof):
-        """Mock publishing proof to IPFS / Nostr for distributed caching."""
-        print(f"  [CACHE] Published proof for {proof.address} to IPFS/Nostr (TTL 300s)")
 
     # ───────────────────────────────────────────────────────────────
     # Gitcoin Passport — Scorer API
@@ -250,14 +228,6 @@ class PassportGateway:
         # Fallback heurístico (demo / testes)
         return address.startswith("0xAlice") or address.startswith("0xArchitect")
 
-    def _check_sanctions(self, address: str) -> bool:
-        """
-        Proof of Clean Hands (AML).
-        Returns True if the address is CLEAR of sanctions.
-        """
-        sanctioned_addresses = ["0xSanctioned123...", "0xBadActor..."]
-        return address not in sanctioned_addresses
-
     # ───────────────────────────────────────────────────────────────
     # Verificação canônica de humanidade
     # ───────────────────────────────────────────────────────────────
@@ -271,15 +241,6 @@ class PassportGateway:
         Verifica se endereço é humano via Passport + ORCID.
         Retorna HumanityProof com seal canônico.
         """
-        now = datetime.now(timezone.utc).timestamp()
-
-        # Check cache (TTL 300s)
-        if address in self.cache:
-            entry = self.cache[address]
-            if now - entry['timestamp'] < 300:
-                print(f"  [CACHE] HIT for {address}")
-                return entry['proof']
-
         threshold = min_score if min_score is not None else MIN_HUMANITY_SCORE
         raw_score = 0.0
         stamps: List[StampCredential] = []
@@ -300,7 +261,7 @@ class PassportGateway:
         orcid_ok = await self.verify_orcid_link(address, orcid_id)
 
         # Proof of Clean Hands (AML) — simulado; em produção integrar com Individual Verifications
-        sanctions_clear = self._check_sanctions(address)
+        sanctions_clear = True
 
         is_human = (normalized >= threshold) or orcid_ok
 
@@ -316,10 +277,6 @@ class PassportGateway:
             status=status,
         )
         proof.compute_seal()
-
-        self.cache[address] = {'timestamp': now, 'proof': proof}
-        self._publish_to_ipfs_nostr(proof)
-
         return proof
 
     # ───────────────────────────────────────────────────────────────
@@ -340,8 +297,7 @@ class PassportGateway:
     # ───────────────────────────────────────────────────────────────
     async def verify_node_access(self, address: str, orcid_id: Optional[str] = None) -> bool:
         """Operador de nó deve ser humano verificado ou ter ORCID."""
-        proof = await self.is_human(address, orcid_id=orcid_id)
-        return (proof.is_human or proof.orcid_verified) and proof.sanctions_clear
+        return await self.verify_dao_voter(address, orcid_id)
 
     # ───────────────────────────────────────────────────────────────
     # Integração Axiarchy (954) — validação ética
@@ -385,3 +341,43 @@ class PassportGateway:
   ORCID Client configurado: {"Sim" if self.orcid_client_id else "Não"}
 ╚══════════════════════════════════════════════════════════════════╝
 """
+
+
+# ═══════════════════════════════════════════════════════════════════
+# DEMONSTRAÇÃO
+# ═══════════════════════════════════════════════════════════════════
+
+async def demo():
+    print("=" * 68)
+    print("  ARKHE PASSPORT-GATEWAY — DEMONSTRAÇÃO")
+    print("=" * 68)
+
+    gw = PassportGateway()
+    await gw.start()
+
+    # Teste com endereço mock (sem API key, cai em fallback)
+    print("\n[1] Verificando endereço mock (modo simulação)...")
+    proof = await gw.is_human("0xArchitect1234567890abcdef", orcid_id="0009-0005-2697-4668")
+    print(f"    is_human: {proof.is_human}")
+    print(f"    score: {proof.score:.2f}")
+    print(f"    seal: {proof.seal}")
+
+    # Verificação DAO
+    print("\n[2] Verificação de eleitor DAO:")
+    can_vote = await gw.verify_dao_voter("0xAlice1234567890abcdef")
+    print(f"    Pode votar: {can_vote}")
+
+    # Validação Axiarchy
+    print("\n[3] Validação Axiarchy:")
+    result = await gw.axiarchy_validate("0xAlice1234567890abcdef", "vote")
+    print(f"    approved: {result['approved']}")
+    print(f"    seal: {result['seal']}")
+
+    print("\n[4] Relatório canônico:")
+    print(gw.generate_report())
+
+    await gw.stop()
+
+
+if __name__ == "__main__":
+    asyncio.run(demo())
