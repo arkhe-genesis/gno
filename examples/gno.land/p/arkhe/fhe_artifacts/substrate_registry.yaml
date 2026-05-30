@@ -113,3 +113,7 @@
   name: "CATHEDRAL-DAO-GOVERNANCE"
   category: "Governance"
   links: ["978", "976", "972.3", "965", "954", "964", "970", "923", "937", "955"]
+"280":
+  name: "O PYTHON DA ASI (Manifesto Canónico)"
+  category: "Manifesto / Arquitetura"
+  links: ["278", "965", "980", "976", "977", "979", "981", "982", "983", "984", "985", "986", "987", "988", "989", "990"]
