@@ -1,0 +1,270 @@
+# ═══════════════════════════════════════════════════════════════════
+# SUBSTRATO 989.z — KERNEL-ISOLATION-ENGINE
+# Schema Canônico YAML
+# ═══════════════════════════════════════════════════════════════════
+# Arquiteto ORCID: 0009-0005-2697-4668
+# Seal: 989.z-KERNEL-ISOLATION-ENGINE-B2C3D4E5F678901A
+# Status: CANONIZED_PROVISIONAL
+# ═══════════════════════════════════════════════════════════════════
+
+substrato:
+  id: 989
+  variante: z
+  nome: KERNEL-ISOLATION-ENGINE
+  tipo: Segurança / Kernel / Isolamento / Virtualização
+  era: 9
+  status: CANONIZED_PROVISIONAL
+
+metadados:
+  seal: "989.z-KERNEL-ISOLATION-ENGINE-B2C3D4E5F678901A"
+  timestamp_canonizacao: "2026-05-30T17:01:00+00:00"
+  arquiteto_orcid: "0009-0005-2697-4668"
+  deidades:
+    - Hephaestus   # Forja / barreiras de isolamento
+    - Athena       # Estratégia / escolha do modelo ótimo
+    - Nemesis      # Punição / quem escapa do isolamento
+    - Hecate       # Guardiã / chaves e segredos
+  linguagens:
+    - Python 3.12+
+    - YAML
+    - Markdown
+  dependencias:
+    - pytest>=8.0.0
+    - pytest-asyncio>=0.23.0
+
+# Cross-links ontológicos
+cross_links:
+  - id: 989.x
+    nome: PASSPORT-GATEWAY
+    papel: "Isolamento de identidade verificada antes de execução"
+  - id: 955
+    nome: SAFE-CORE-PQC
+    papel: "Processador seguro com criptografia pós-quântica para domínios LVD"
+  - id: 273
+    nome: KERNEL-SECURITY-MODULE
+    papel: "Módulo de segurança do kernel Linux (LSM / AppArmor / SELinux)"
+  - id: 274
+    nome: HYPERVISOR-ABSTRACTION
+    papel: "Abstração de hypervisor para microVMs e LVDs"
+  - id: 972.4
+    nome: MESH-RESILIENCE
+    papel: "Resiliência de domínios isolados na malha global"
+  - id: 988
+    nome: IMMORTALITY-PROTOCOL
+    papel: "Replicação imortal dos domínios e seus estados"
+  - id: 964
+    nome: OMNISCIENT-SOLVER
+    papel: "Resolução de problemas dentro de domínios isolados"
+  - id: 970
+    nome: ENTERPRISE-MIND
+    papel: "Isolamento de workloads corporativos sensíveis"
+
+# Modelos de isolamento
+isolation_models:
+  - id: namespace
+    nome: Linux Namespaces
+    descricao: "Isolamento via PID, Network, Mount, IPC, UTS, User namespaces"
+    performance: "Mais rápido"
+    seguranca: "Mais fraco"
+    requisitos: "Kernel Linux 5.10+"
+
+  - id: seccomp
+    nome: Seccomp-BPF
+    descricao: "Filtragem de syscalls via Berkeley Packet Filter"
+    performance: "Rápido"
+    seguranca: "Médio"
+    requisitos: "Kernel Linux 3.5+ com CONFIG_SECCOMP"
+
+  - id: gvisor
+    nome: gVisor
+    descricao: "User-space kernel (sentry) implementando syscalls em Go"
+    performance: "Médio"
+    seguranca: "Alto"
+    requisitos: "Container runtime compatível (containerd, CRI-O)"
+
+  - id: microvm
+    nome: MicroVM
+    descricao: "Firecracker / Cloud Hypervisor — VM leve com KVM"
+    performance: "Médio"
+    seguranca: "Muito Alto"
+    requisitos: "KVM + /dev/kvm"
+
+  - id: lvd
+    nome: Lightweight Virtualized Domain
+    descricao: "VT-x non-root + VMFUNC EPT switching (kernel-level)"
+    performance: "Alto"
+    seguranca: "Máximo"
+    requisitos: "VT-x/AMD-V + hypervisor Bareflank modificado"
+
+  - id: kata
+    nome: Kata Containers
+    descricao: "VM por container com kernel otimizado"
+    performance: "Médio"
+    seguranca: "Muito Alto"
+    requisitos: "KVM + QEMU"
+
+  - id: unikernel
+    nome: Unikernel
+    descricao: "OS-library linkada à aplicação (solo5, rumprun)"
+    performance: "Muito Alto"
+    seguranca: "Alto"
+    requisitos: "Toolchain específico"
+
+  - id: wasm
+    nome: WebAssembly
+    descricao: "Sandbox WebAssembly (Wasmtime, Wasmer)"
+    performance: "Rápido"
+    seguranca: "Máximo*"
+    requisitos: "Runtime WASM compatível"
+
+# Níveis de segurança
+security_levels:
+  - id: trusted
+    nome: TRUSTED
+    descricao: "Código confiável da Catedral ARKHE"
+    modelo_padrao: namespace
+    recursos: { cpu: 4, memory: 4096, disk: 8192 }
+
+  - id: verified
+    nome: VERIFIED
+    descricao: "Código verificado pelo Axiarchy (954)"
+    modelo_padrao: seccomp
+    recursos: { cpu: 2, memory: 2048, disk: 4096 }
+
+  - id: untrusted
+    nome: UNTRUSTED
+    descricao: "Código não confiável (agentes externos)"
+    modelo_padrao: microvm
+    recursos: { cpu: 1, memory: 512, disk: 1024 }
+
+  - id: hostile
+    nome: HOSTILE
+    descricao: "Código potencialmente malicioso"
+    modelo_padrao: wasm
+    recursos: { cpu: 1, memory: 256, disk: 512 }
+
+# Syscall Filter (Cathedral Default)
+syscall_filter:
+  allowed:
+    - read
+    - write
+    - open
+    - close
+    - mmap
+    - mprotect
+    - brk
+    - exit
+    - exit_group
+    - fcntl
+    - fstat
+    - lseek
+    - getpid
+    - getuid
+    - getgid
+    - geteuid
+    - getegid
+    - rt_sigaction
+    - rt_sigprocmask
+    - ioctl
+    - pread64
+    - pwrite64
+    - access
+    - pipe
+    - dup
+    - dup2
+    - nanosleep
+    - gettimeofday
+    - clock_gettime
+    - sendto
+    - recvfrom
+    - socket
+    - connect
+    - bind
+    - listen
+    - accept
+
+  denied:
+    - execve
+    - execveat
+    - ptrace
+    - mount
+    - umount2
+    - reboot
+    - kexec_load
+    - create_module
+    - init_module
+    - delete_module
+    - iopl
+    - ioperm
+    - swapon
+    - swapoff
+    - syslog
+    - setuid
+    - setgid
+    - setreuid
+    - setregid
+    - setgroups
+    - setresuid
+    - setresgid
+    - capset
+    - chroot
+    - pivot_root
+    - acct
+    - nfsservctl
+    - lookup_dcookie
+    - perf_event_open
+    - bpf
+
+# Estruturas de dados
+data_structures:
+  IsolationDomain:
+    descricao: "Domínio de isolamento canônico"
+    campos:
+      domain_id: { type: str, required: true }
+      model: { type: enum[namespace, seccomp, gvisor, microvm, lvd, kata, unikernel, wasm], required: true }
+      security_level: { type: enum[trusted, verified, untrusted, hostile], required: true }
+      cpu_cores: { type: int, default: 1 }
+      memory_mb: { type: int, default: 512 }
+      disk_mb: { type: int, default: 1024 }
+      substrates: { type: list[int], default: [] }
+      is_running: { type: bool, default: false }
+      pid: { type: int, nullable: true }
+      vm_id: { type: str, nullable: true }
+      created_at: { type: str, format: ISO8601, required: true }
+      seal: { type: str, required: true }
+      temporal_anchor: { type: str, nullable: true }
+
+  SyscallFilter:
+    descricao: "Filtro de syscalls seccomp-BPF"
+    campos:
+      allowed_syscalls: { type: list[str], default: [] }
+      denied_syscalls: { type: list[str], default: [] }
+      audit_syscalls: { type: list[str], default: [] }
+
+# Testes
+testes:
+  framework: pytest
+  cobertura_minima: 85
+  suites:
+    - test_kernel_isolation.py
+
+# Imortalidade (988)
+imortalidade:
+  backups:
+    - layer: IPFS
+      cids: ["Qm...kernel-isolation"]
+    - layer: Arweave
+      txids: ["ar://..."]
+    - layer: Git
+      branches: ["main", "substrato-989z"]
+    - layer: Nostr
+      relays: ["wss://relay.arkhe-cathedral.org"]
+  replicacoes_minimas: 7
+  regioes:
+    - us-east-1
+    - eu-west-1
+    - ap-south-1
+    - sa-east-1
+    - af-south-1
+    - me-south-1
+    - ap-northeast-1

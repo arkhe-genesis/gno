@@ -1,0 +1,6 @@
+# ARKHE Cathedral — Substrato 989.z KERNEL-ISOLATION-ENGINE
+# Arquiteto ORCID: 0009-0005-2697-4668
+# Seal: 989.z-KERNEL-ISOLATION-ENGINE-B2C3D4E5F678901A
+
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
