@@ -1,0 +1,63 @@
+version: "3.8"
+# ARKHE Global Mesh — Docker Compose para nós
+# Substrato 972 — ARKHE-GLOBAL-MESH
+
+services:
+  arkhe-node:
+    image: arkhe-cathedral/node:3.0.0
+    container_name: arkhe-node-{{NODE_ID}}
+    restart: unless-stopped
+
+    ports:
+      - "9230:9230/udp"  # QUIC
+      - "443:443/tcp"    # gRPC
+      - "8443:8443/tcp"  # WebSocket
+
+    volumes:
+      - ./config:/etc/arkhe:ro
+      - ./data:/var/arkhe
+      - ./logs:/var/log/arkhe
+      - ./certs:/etc/arkhe/certs:ro
+
+    environment:
+      - ARKHE_NODE_ID={{NODE_ID}}
+      - ARKHE_REGION={{REGION_CODE}}
+      - ARKHE_MODE=unified
+      - ARKHE_THEOSIS_TARGET=-0.5
+      - ARKHE_TEMPORALCHAIN=https://api.arkhe-catedral.org/v1
+
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+
+    healthcheck:
+      test: ["CMD", "arkhe", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    networks:
+      - arkhe-mesh
+
+  arkhe-monitor:
+    image: prom/prometheus:latest
+    container_name: arkhe-monitor-{{NODE_ID}}
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    networks:
+      - arkhe-mesh
+
+networks:
+  arkhe-mesh:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16

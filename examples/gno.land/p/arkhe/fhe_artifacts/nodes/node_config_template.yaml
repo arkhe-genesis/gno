@@ -1,0 +1,92 @@
+# ARKHE Global Mesh — Node Configuration
+# Substrato 972 — ARKHE-GLOBAL-MESH
+# Arquiteto ORCID: 0009-0005-2697-4668
+
+node:
+  id: "{{NODE_ID}}"
+  region: "{{REGION_CODE}}"
+  ip: "{{NODE_IP}}"
+  port: 9230
+
+  # Protocolos de transporte
+  protocols:
+    - quic:
+        version: "1"
+        port: 9230
+        tls: "1.3"
+        mTLS: true
+        certificates:
+          - ed25519_node.pub
+          - ed25519_node.key
+    - grpc:
+        port: 443
+        reflection: true
+    - websocket:
+        port: 8443
+        path: "/ws"
+
+  # Novos protocolos integrados
+  tor:
+    enabled: true
+    onion_service: true
+    socks_port: 9050
+    control_port: 9051
+    onion_private_key: "{{ED25519_KEY_PATH}}/tor_private_key"
+
+  nostr:
+    relay_port: 4737
+    relay_ws: "/nostr"
+    bootstrap_relays:
+      - "wss://relay.arkhe-catedral.org"
+      - "wss://{{NODE_ONION}}/nostr"
+
+  ipfs:
+    enabled: true
+    swarm_port: 4001
+    api_port: 5001
+    gateway_port: 8080
+    bootstrap_peers:
+      - "/dnsaddr/bootstrap.arkhe-catedral.org"
+      - "/onion3/{{NODE_ONION}}:4001"
+
+  # Substratos instalados
+  substrates:
+    core:
+      - 966  # AGI-Hamiltonian-Training
+      - 967  # Memory-Hierarchy-Cathedral
+      - 968  # Memory-Cathedral-Optimized
+      - 970  # Enterprise-Mind
+      - 971  # Self-Reflexive-Cathedral
+    optional:
+      - 955  # Safe-Core-PQC
+      - 951  # Conscious-Replay
+      - 952  # Bindu
+      - 953  # Tanmatra
+      - 954  # Axiarchy
+      - 890  # World-Model-V3
+      - 923  # TemporalChain
+      - 933  # FluxMem
+
+  # Métricas de performance
+  performance:
+    max_latency_ms: 500
+    min_bandwidth_mbps: 10
+    max_connections: 1024
+    heartbeat_interval_sec: 30
+
+  # Segurança
+  security:
+    encryption: AES-256-GCM
+    signatures: Ed25519
+    pqc:
+      kyber: enabled
+      dilithium: enabled
+
+  # Ancoragem
+  anchor:
+    temporalchain_endpoint: "https://api.arkhe-catedral.org/v1/anchor"
+    auto_anchor: true
+    anchor_interval_sec: 300
+
+  # Deidade local (varia por região)
+  deity: "{{REGION_DEITY}}"
