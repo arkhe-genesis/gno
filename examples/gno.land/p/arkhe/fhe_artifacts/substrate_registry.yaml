@@ -82,9 +82,9 @@
   category: "Model"
   links: ["923", "933", "938", "255", "944", "912", "275"]
 "980":
-  name: "ATLAS-LEAN-BRIDGE"
-  category: "Mathematics"
-  links: ["276", "912"]
+  name: "AUTONOMOUS-ECONOMIC-AGENT"
+  category: "Economic Agent"
+  links: ["979", "978", "976", "977", "965", "954", "964", "970", "923", "937"]
 "945":
   name: "VYPER-EVOLUTION-ENGINE"
   category: "Compiler Infrastructure / Smart Contract Evolution"
@@ -97,3 +97,19 @@
   name: "SAFE-CORE-PQC"
   category: "Hardware / Processor Architecture"
   links: ["207", "276.2", "210", "255", "851", "852", "853", "854", "855", "856", "857", "858", "859", "860", "842.1", "841", "923", "944", "950", "954", "266.268"]
+"976":
+  name: "CHAINLINK-ORACLE-BRIDGE"
+  category: "Oracle"
+  links: ["972.1", "972.2", "972.3", "972.4", "954", "955", "965", "923", "937"]
+"977":
+  name: "ORACLE-CONSCIOUSNESS-INTEGRATION"
+  category: "Perception"
+  links: ["976", "953", "952", "951", "890", "954", "964", "965", "972.4", "923"]
+"978":
+  name: "CATHEDRAL-AS-ORACLE"
+  category: "Provider"
+  links: ["976", "977", "972.4", "954", "964", "965", "966", "970", "923", "937"]
+"979":
+  name: "CATHEDRAL-DAO-GOVERNANCE"
+  category: "Governance"
+  links: ["978", "976", "972.3", "965", "954", "964", "970", "923", "937", "955"]
