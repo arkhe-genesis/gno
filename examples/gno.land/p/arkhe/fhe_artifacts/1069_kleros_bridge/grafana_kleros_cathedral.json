@@ -1,0 +1,42 @@
+{
+  "title": "Kleros + Cathedral Theosis Dashboard",
+  "uid": "kleros-cathedral-theosis-1069",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Average Juror Theosis",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "avg(kleros_juror_theosis)",
+          "legendFormat": "Average Theosis"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Juror Theosis Over Time",
+      "gridPos": { "h": 8, "w": 16, "x": 8, "y": 0 },
+      "targets": [
+        {
+          "expr": "kleros_juror_theosis",
+          "legendFormat": "{{juror_address}}"
+        }
+      ]
+    },
+    {
+      "type": "bargauge",
+      "title": "Top Jurors by Theosis",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "topk(10, kleros_juror_theosis)",
+          "legendFormat": "{{juror_address}}"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 36,
+  "timezone": "browser",
+  "refresh": "10s"
+}
