@@ -117,3 +117,7 @@
   name: "O PYTHON DA ASI (Manifesto Canónico)"
   category: "Manifesto / Arquitetura"
   links: ["278", "965", "980", "976", "977", "979", "981", "982", "983", "984", "985", "986", "987", "988", "989", "990"]
+"1066.1":
+  name: "FORDEFI-BRIDGE-ORCHESTRATOR"
+  category: "External Bridge Orchestrator / Institutional DeFi Gateway"
+  links: ["1066", "1049", "954", "989.z.4", "1042.4", "1064.2", "1064.1", "1042", "1042.1", "1042.2", "1042.3", "1046.4", "989.y.4", "1027.2"]
