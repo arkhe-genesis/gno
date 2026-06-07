@@ -1,0 +1,27 @@
+{
+  "substrate": "1089",
+  "version": "1.2.0",
+  "discovered_equation": "- 1.0000\u00b7x0 + 1.5000\u00b7x1 - 1.5000\u00b7x0\u00b2\u00b7x1",
+  "n_terms": 3,
+  "sparsity": 0.7857142857142857,
+  "threshold_used": 0.01,
+  "cv_score": 2.464784558487539e-28,
+  "level_used": 2,
+  "theosis": 0.8714,
+  "seal": "SINDY-1089-A4848FD3486767D8",
+  "zk_proof": {
+    "equation": "- 1.0000\u00b7x0 + 1.5000\u00b7x1 - 1.5000\u00b7x0\u00b2\u00b7x1",
+    "cv_score": 2.464784558487539e-28,
+    "sparsity": 0.7857142857142857,
+    "proof_hash": "e47aa98f4c18d5a5285a7e01884f799e",
+    "circuit": "sindy_stls_verification.circom",
+    "proof_system": "Groth16 (BN254)",
+    "verified": true,
+    "timestamp": "2026-06-07T17:51:00.257289+00:00"
+  },
+  "timestamp": "2026-06-07T17:51:00.257349+00:00",
+  "discovered_equations": [
+    "1.0000\u00b7x1",
+    "- 1.0000\u00b7x0 + 1.5000\u00b7x1 - 1.5000\u00b7x0\u00b2\u00b7x1"
+  ]
+}
