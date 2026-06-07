@@ -125,7 +125,7 @@
   name: "DIGITAL_ASSET_CUSTODY_BRIDGE"
   category: "Custody Governance / Multi-Sig / ZK-Proof of Reserves / Validator Management"
   links: ["954", "989.z.4", "1055", "1042.4", "1064.2", "1066", "923"]
-"1076.3":
-  name: "ORCHESTRATOR RSI LOOP"
-  category: "Orchestration / Continuous Improvement"
-  links: ["1089", "1062", "1046.2", "1085"]
+"1089":
+  name: "DYNAMIC SYSTEM IDENTIFICATION ENGINE"
+  category: "identification"
+  links: ["1083"]
