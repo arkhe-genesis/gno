@@ -129,3 +129,11 @@
   name: "DYNAMIC SYSTEM IDENTIFICATION ENGINE"
   category: "identification"
   links: ["1083"]
+"1101":
+  name: "HASHTREE BRIDGE"
+  category: "persistence"
+  links: ["1100", "1097", "1094", "1095", "1092"]
+"1100":
+  name: "ONCHAIN CANONIZER"
+  category: "persistence"
+  links: ["1091", "1097", "1099", "1085", "1092", "1101"]

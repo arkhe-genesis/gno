@@ -1,0 +1,34 @@
+# config/plugins/onchain.yaml
+# Configuração do OnChainCanonizer — Substrato 1100
+
+substrates:
+  onchain:
+    chain_id: "1"                    # MAINNET (1), SEPOLIA (11155111), RBB (12120014)
+    rpc_url: "${ETHERSCAN_RPC_URL}"
+    api_key: "${ETHERSCAN_API_KEY}"
+    private_key: "${CANONIZER_PRIVATE_KEY}"
+    target_addresses:
+      - "0xbF7Da1f568684889A69A5BED9F1311F703985590"
+      - "0x716aD3C33A9B9a0A18967357969b94EE7d2ABC10"
+
+    # Sync
+    sync_interval: 300                # segundos entre syncs
+    sync_start_block: 0
+
+    # Governance
+    governance_deadline: 604800      # 7 dias (segundos)
+
+    # Merkle anchor
+    merkle_anchor_interval: 100       # a cada N entradas
+    auto_anchor: true
+
+    # Integração com outros substratos
+    auto_canonize_kleros: true        # canonizar veredictos Kleros
+    auto_canonize_garak: true         # canonizar relatórios Garak
+    auto_canonize_theosis: true      # canonizar leituras Theosis
+
+    # EIP-712 Domain
+    domain:
+      name: "CathedralArkhe"
+      version: "6.0.0"
+      verifyingContract: "0xbF7Da1f568684889A69A5BED9F1311F703985590"
