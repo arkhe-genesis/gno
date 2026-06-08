@@ -4,8 +4,10 @@ Testar cenário de censura total (todos os circuitos bloqueados) – failover pa
 """
 
 import asyncio
+import pytest
 from bridge_nostr_tor_ipfs import NostrTorIpfsBridge
 
+@pytest.mark.asyncio
 async def test_censura_total():
     print("\n--- TESTE DE CENSURA TOTAL: BLOQUEIO TOR ---")
 
