@@ -129,3 +129,39 @@
   name: "DYNAMIC SYSTEM IDENTIFICATION ENGINE"
   category: "identification"
   links: ["1083"]
+"1094.1":
+  name: "GGUF Bridge v3"
+  category: "bridge"
+  links: ["1098"]
+"1094.2":
+  name: "LlamaCppBridge v3"
+  category: "bridge"
+  links: ["1098"]
+"1091.2":
+  name: "VectorTheosis v4.0.0"
+  category: "cognition"
+  links: ["1098"]
+"1081.1":
+  name: "Stethoscope v3.0.0"
+  category: "observability"
+  links: ["1098"]
+"1085.1":
+  name: "Kleros v3"
+  category: "governance"
+  links: ["1098", "1097"]
+"1095":
+  name: "ZKML Bridge"
+  category: "bridge"
+  links: ["1098"]
+"1096":
+  name: "Agentic Loop"
+  category: "cognition"
+  links: ["1098"]
+"1097":
+  name: "TemporalChain v2"
+  category: "infrastructure"
+  links: ["1098", "1085.1"]
+"1098":
+  name: "CATHEDRAL ORCHESTRATOR V5.0"
+  category: "orchestration"
+  links: ["1094.1", "1094.2", "1091.2", "1081.1", "1085.1", "1095", "1096", "1097"]
