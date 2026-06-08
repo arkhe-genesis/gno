@@ -1,0 +1,18 @@
+# config/profiles/local_cpu.yaml
+# Perfil: execução em CPU sem GPU
+# Sobrescreve cathedral.site.yaml
+
+system:
+  max_workers: 4  # Menos workers em CPU
+
+plugins:
+  target_type: "llama"
+
+substrates:
+  zkml:
+    # CPU: usar modo simulado (ezkl real é muito lento)
+    force_simulated: true
+  lora:
+    batch_size: 1        # Batch 1 em CPU
+    num_train_epochs: 1
+    learning_rate: 0.0001  # LR menor para estabilidade
