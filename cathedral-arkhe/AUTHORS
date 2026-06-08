@@ -1,0 +1,34 @@
+# Autores e Contribuidores
+
+## Arquiteto Principal
+
+- **ORCID 0009-0005-2697-4668** — Arquiteto e mantenedor do Cathedral ARKHE
+
+## Código-base utilizado
+
+- **NVIDIA Corporation** — Estrutura CLI (`garak.__main__.py`) e conceito de plugin system
+  - SPDX-License-Identifier: Apache-2.0
+  - Portions Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES
+
+- **Chen et al. (2026)** — ZKML: provas ZK para inferência ML
+  - Referência: ezkl/Modulus framework
+
+- **OECD (2026)** — Agentic AI: governança multi-camada
+  - Referência: OECD AI Policy Observatory, Feb 2026
+
+## Contribuidores
+
+Para contribuir:
+
+1. Fork o repositório
+2. Crie branch feature/fix
+3. Escreva testes
+4. Siga o padrão de código existente
+5. Adicione selo ao novo substrato (`SEALS` em `_version.py`)
+6. Abra PR com descrição clara
+
+## Selos
+
+Todos os substratos possuem selos no formato `NOME-NNNN-vX.Y.Z-YYYY-MM-DD`.
+
+Ver `cathedral/_version.py:SEALS` para a lista completa.

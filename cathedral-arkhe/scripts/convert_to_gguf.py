@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+"""Converte modelo HuggingFace para GGUF com quantização.
+
+Uso:
+    python scripts/convert_to_gguf.py meta-llama/Llama-2-7b-hf --quant q4_k_m
+"""
+
+import argparse
+import subprocess
+import sys
+
+
+def main():
+    parser = argparse.ArgumentParser(description="HF → GGUF conversion")
+    parser.add_argument("model_id", help="HuggingFace model ID or local path")
+    parser.add_argument("--quant", default="q4_k_m",
+                        choices=["q4_0", "q4_1", "q5_0", "q5_1", "q4_k_s", "q4_k_m",
+                                 "q5_k_s", "q5_k_m", "q6_k", "q8_0"],
+                        help="Quantização (default: q4_k_m)")
+    parser.add_argument("--out", default=None,
+                        help="Output path (default: auto)")
+    parser.add_argument("--ctx", type=int, default=4096,
+                        help="Context length (default: 4086→4096)")
+    args = parser.parse_args()
+
+    model_id = args.model_id
+    out_name = args.out or f"{model_id.split('/')[-1]}-{args.quant}.gguf"
+
+    cmd = [
+        sys.executable, "-m", "llama_cpp.convert",
+        model_id,
+        "--outtype", "gguf",
+        "--outfile", out_name,
+        "--outquant", args.quant,
+    ]
+
+    print(f"Convertendo: {model_id} → {out_name} ({args.quant})")
+    print(f"Comando: {' '.join(cmd)}")
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    print(result.stdout)
+    if result.returncode != 0:
+        print(f"Erro: {result.stderr}")
+        sys.exit(1)
+
+    print(f"\n✓ Modelo salvo: {out_name}")
+    print(f"  Tamanho: {__import__('os').path.getsize(out_name) / 1e9:.2f} GB")
+
+
+if __name__ == "__main__":
+    main()
