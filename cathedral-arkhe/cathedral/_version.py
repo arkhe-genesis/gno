@@ -1,8 +1,9 @@
 # cathedral/_version.py
 """Versão centralizada — único local para modificar."""
 
-__version__ = "5.1.0"
-__version_info__ = (5, 1, 0)  # major, minor, patch
+__version__ = "9.0.0"
+__codename__ = "LOGOS"
+__version_info__ = (9, 0, 0)  # major, minor, patch
 
 # Selos (atualizados junto com a versão)
 SEALS = {

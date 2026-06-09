@@ -1,6 +1,6 @@
 # cathedral/__init__.py
 """
-Cathedral ARKHE — Recursive Self-Improvement Orchestration
+Cathedral ARKHE v9.0 LOGOS — Recursive Self-Improvement Orchestration
 
 Substratos ativos:
   1094.1  GGUF Bridge v3
@@ -15,11 +15,12 @@ Substratos ativos:
   1099    Garak Bridge v1.0.0
 """
 
-from cathedral._version import __version__, __version_info__
+from cathedral._version import __version__, __version_info__, __codename__
 from cathedral.orchestrator.v5_1 import CathedralOrchestratorV5_1
 
 __all__ = [
     "CathedralOrchestratorV5_1",
     "__version__",
     "__version_info__",
+    "__codename__",
 ]
