@@ -137,3 +137,7 @@
   name: "ONCHAIN CANONIZER"
   category: "persistence"
   links: ["1091", "1097", "1099", "1085", "1092", "1101"]
+"1106":
+  name: "Constitutional AI v3 Governance"
+  category: "governance"
+  links: ["1101", "1096"]
