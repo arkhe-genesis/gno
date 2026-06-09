@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cathedral-arkhe"
-version = "5.1.0"
+version = "9.0.0"
 description = "Cathedral ARKHE — Recursive Self-Improvement Orchestration with ZKML verification, LoRA adaptation, and agentic safety scanning"
 readme = "docs/index.md"
 license = {text = "Apache-2.0"}
