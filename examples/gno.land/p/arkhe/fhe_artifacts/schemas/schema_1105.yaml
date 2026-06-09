@@ -1,0 +1,25 @@
+# schema_1105.yaml — CathedralUI Dashboard
+substrato:
+  id: 1105
+  nome: CATHEDRAL-UI
+  versao: "10.1.0"
+  status: CANONIZED
+  descricao: >
+    CathedralUI (1105) — Real-time dashboard layer aggregating canonical state,
+    governance proposals, safety telemetry, and Theosis RL policy visualization.
+  deuses_patronos:
+    - Iris (Mensageira, Arco-íris, Interconexão)
+  linguagens: [Python, HTML, CSS]
+
+componentes:
+  - nome: ui_renderer
+    tipo: visualizacao
+    descricao: Gera dashboard HTML dinâmico com métricas consolidadas.
+    endpoints:
+      - render_html
+      - save_dashboard
+
+cross_links:
+  - 1100 (OnChain Canonizer)
+  - 1101 (Hashtree Bridge)
+  - 1085 (ClawProof)
