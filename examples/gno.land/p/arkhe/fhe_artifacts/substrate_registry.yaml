@@ -141,3 +141,7 @@
   name: "Constitutional AI v3 Governance"
   category: "governance"
   links: ["1101", "1096"]
+"1105":
+  name: "CATHEDRAL UI DASHBOARD"
+  category: "ui"
+  links: ["1100", "1101", "1085", "1096"]
