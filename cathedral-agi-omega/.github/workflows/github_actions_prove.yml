@@ -1,0 +1,25 @@
+name: Reject Unproven Code
+
+on:
+  pull_request:
+    paths:
+      - 'ZK_REASONING_ENGINE/circuits/**'
+      - 'COGNITIVE_CORTEX/agents/**'
+      - 'DISTRIBUTED_COMPUTATION/**'
+
+jobs:
+  check-lean-proofs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Run script
+        run: |
+          python INFRASTRUCTURE/ci_cd/reject_unproven.py

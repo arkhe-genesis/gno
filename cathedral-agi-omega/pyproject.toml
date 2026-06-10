@@ -1,0 +1,36 @@
+[project]
+name = "cathedral-agi-omega"
+version = "11.4.0"
+description = "Cathedral AGI Omega - Decentralized Autonomous AI OS"
+authors = [
+    {name = "Arquiteto", email = "architect@arkhe.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "blst-py>=0.3.8",
+    "substrate-interface>=1.7.5",
+    "py_ecc>=7.0.0",
+    "web3>=6.0.0",
+    "neo4j>=5.9.0",
+    "torch>=2.0.0",
+    "ezkl>=0.2.0",
+    "pydantic>=2.0.0",
+    "fastapi>=0.100.0",
+    "requests>=2.31.0",
+    "numpy>=1.24.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21.0"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["TESTING_SIMULATION"]
