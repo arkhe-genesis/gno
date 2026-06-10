@@ -1,0 +1,24 @@
+name: PR Lean Proof Checker
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-proofs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Run Reject Unproven Check
+        run: |
+          python cathedral-agi-omega/INFRASTRUCTURE/ci_cd/reject_unproven.py
