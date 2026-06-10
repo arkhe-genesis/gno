@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "cathedral-agi-omega"
+version = "0.1.0"
+description = "Cathedral AGI Omega: A verifiably safe AGI implementation."
+authors = ["Arkhe Foundation <contact@arkhe.foundation>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+blst-py = "^0.0.1" # Hypothetical / wrapper for blst
+substate-interface = "^0.0.1" # Hypothetical
+py_ecc = "^7.0.1"
+web3 = "^6.11.1"
+neo4j = "^5.14.0"
+torch = "^2.1.0"
+ezkl = "^0.2.0" # ZK-SNARK for deep learning
+pydantic = "^2.4.2"
+fastapi = "^0.103.2"
+uvicorn = "^0.23.2"
+python-multipart = "^0.0.6"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-asyncio = "^0.21.1"
+flake8 = "^6.1.0"
+black = "^23.10.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
