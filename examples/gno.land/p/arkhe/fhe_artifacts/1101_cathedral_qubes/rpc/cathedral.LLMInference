@@ -1,0 +1,14 @@
+#!/bin/bash
+# /etc/qubes-rpc/cathedral.LLMInference (no llm-inference VM)
+# Recebe prompt via stdin, retorna completion via stdout
+
+read -r -d '' PAYLOAD < /dev/stdin
+
+# Validar tamanho máximo (proteção DoS)
+if [ ${#PAYLOAD} -gt 100000 ]; then
+    echo '{"error": "payload_too_large"}' >&2
+    exit 1
+fi
+
+# Executar inferência via llama.cpp ou vLLM
+echo "$PAYLOAD" | /usr/local/bin/llm-server --max-tokens 4096

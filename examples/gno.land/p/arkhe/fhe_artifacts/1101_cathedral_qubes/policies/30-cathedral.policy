@@ -1,0 +1,42 @@
+# ============================================================
+# CATHEDRAL ARKHE v12.0 — Políticas qrexec
+# Selo: CATHEDRAL-QUBES-1101-v1.0.0-2026-06-12
+# ============================================================
+
+# --- INFERÊNCIA LLM ---
+# agi-core pode solicitar inferência ao llm-inference sem confirmação
+cathedral.LLMInference * agi-core llm-inference allow
+
+# --- BASE DE CONHECIMENTO ---
+# agi-core pode consultar SQL/vector store
+cathedral.QuerySQL * agi-core knowledge-base allow
+cathedral.QueryVector * agi-core knowledge-base allow
+
+# --- GOVERNANCE THRESHOLD ---
+# agi-core pode solicitar assinatura — exige confirmação do usuário
+cathedral.SignProposal * agi-core governance ask
+cathedral.SignAction * agi-core governance ask
+
+# --- ANCORAGEM RBB CHAIN ---
+# governance pode ancorar selos no dom0 (que possui acesso à rede, se configurado)
+cathedral.AnchorSeal * governance dom0 ask
+
+# --- PROTOCOLO CORTE (Substrato 294) ---
+# agi-core pode ordenar terminação de qube comprometido
+cathedral.KillQube * agi-core dom0 ask
+cathedral.PauseQube * agi-core dom0 ask
+
+# --- DISPOSABLE VMs ---
+# Tarefas não confiáveis em dispVMs efêmeros
+cathedral.UntrustedTask * agi-core @dispvm:cathedral-dvm allow
+
+# --- ISOLAMENTO LATERAL ---
+# VMs de ação NUNCA podem comunicar entre si
+qubes.FileCopy * browser-vm email-vm deny
+qubes.FileCopy * browser-vm code-vm deny
+qubes.FileCopy * email-vm code-vm deny
+qubes.OpenInVM * browser-vm email-vm deny
+
+# --- DEFAULT DENY ---
+# Qualquer outra comunicação é negada implicitamente
+$anyvm $anyvm deny
