@@ -1,0 +1,7 @@
+#!/bin/bash
+# /etc/qubes-rpc/cathedral.BTFSProviderList
+
+read -r -d '' PAYLOAD
+CID=$(echo "$PAYLOAD" | jq -r '.cid')
+
+btfs dht findprovs "$CID" | jq -R -s 'split("\n") | map(select(length>0)) | {providers: .}'

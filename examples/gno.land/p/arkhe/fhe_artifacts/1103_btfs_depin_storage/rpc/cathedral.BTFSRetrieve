@@ -1,0 +1,18 @@
+#!/bin/bash
+# /etc/qubes-rpc/cathedral.BTFSRetrieve
+
+read -r -d '' PAYLOAD
+CID=$(echo "$PAYLOAD" | jq -r '.cid')
+
+# Tentar obter o conteúdo
+btfs get -o /tmp/btfs_download.bin "$CID" 2>/dev/null
+if [ ! -f /tmp/btfs_download.bin ]; then
+    echo '{"error": "cid_not_found"}' >&2
+    exit 1
+fi
+
+# Se criptografado, descriptografar (usando chave do governance)
+# (omitido para brevidade – similar ao store)
+
+# Codificar em base64 e retornar
+base64 -w0 /tmp/btfs_download.bin

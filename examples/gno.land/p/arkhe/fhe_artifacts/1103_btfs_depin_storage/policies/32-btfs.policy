@@ -1,0 +1,7 @@
+# /etc/qubes/policy.d/32-btfs.policy
+cathedral.BTFSStore * agi-core btfs-gateway allow
+cathedral.BTFSRetrieve * agi-core btfs-gateway allow
+cathedral.BTFSProviderList * agi-core btfs-gateway allow
+cathedral.BTFSStore * knowledge-base btfs-gateway allow
+cathedral.BTFSRetrieve * knowledge-base btfs-gateway allow
+$anyvm $anyvm deny

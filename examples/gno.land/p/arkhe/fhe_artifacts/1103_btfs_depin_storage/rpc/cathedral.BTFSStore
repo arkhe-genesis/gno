@@ -1,0 +1,30 @@
+#!/bin/bash
+# /etc/qubes-rpc/cathedral.BTFSStore
+# Recebe JSON: {"content_base64": "...", "encrypt": true/false}
+
+read -r -d '' PAYLOAD
+
+CONTENT_B64=$(echo "$PAYLOAD" | jq -r '.content_base64')
+ENCRYPT=$(echo "$PAYLOAD" | jq -r '.encrypt // false')
+
+# Decodificar conteúdo
+echo "$CONTENT_B64" | base64 -d > /tmp/btfs_upload.bin
+
+# Opção de criptografia (usar chave simétrica derivada da chave BLS do governance)
+if [ "$ENCRYPT" = "true" ]; then
+    # Em produção, derivar chave via BLS‑KEM
+    openssl enc -aes-256-gcm -salt -pbkdf2 -in /tmp/btfs_upload.bin -out /tmp/btfs_encrypted.bin -pass pass:"$(cat /var/lib/qvac/secrets/bls_key)"
+    CP_FILE="/tmp/btfs_encrypted.bin"
+else
+    CP_FILE="/tmp/btfs_upload.bin"
+fi
+
+# Adicionar ao BTFS
+CID=$(btfs add -q --pin=false "$CP_FILE" 2>/dev/null | tail -n1)
+
+if [ -z "$CID" ]; then
+    echo '{"error": "btfs_add_failed"}' >&2
+    exit 1
+fi
+
+echo "{\"cid\": \"$CID\", \"encrypted\": $ENCRYPT}"
