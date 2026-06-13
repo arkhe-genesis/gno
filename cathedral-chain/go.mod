@@ -1,3 +1,3 @@
-module github.com/Arkhe-Network/cathedral-chain
+module github.com/cathedral-agi/cathedral-chain
 
-go 1.21
+go 1.24.4
