@@ -46,3 +46,5 @@ node_modules/
 examples/gno.land/p/arkhe/fhe_artifacts/arkhe_jax/target
 *.pyc
 __pycache__/
+target/
+**/target/
