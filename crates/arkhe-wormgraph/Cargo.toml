@@ -1,0 +1,37 @@
+[package]
+name = "arkhe-wormgraph"
+version = "5.2.0"
+edition = "2021"
+authors = ["Arkhe Cathedral <orcid:0009-0005-2697-4668>"]
+description = "WormGraph Core v5.2.0 - O(1) Memory Layer with ZK & FAIR"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+sha3 = { version = "0.10", default-features = false }
+serde = { version = "1.0", features = ["derive"], default-features = false }
+serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
+log = "0.4"
+tokio = { version = "1.0", features = ["full"], optional = true }
+hex = "0.4"
+rand = "0.8"
+criterion = "0.4"
+
+# FFI and WASM features
+pyo3 = { version = "0.18", features = ["extension-module"], optional = true }
+wasm-bindgen = { version = "0.2", optional = true }
+js-sys = { version = "0.3", optional = true }
+serde-wasm-bindgen = { version = "0.5", optional = true }
+
+[features]
+default = ["std"]
+std = ["sha3/std", "serde/std", "serde_json/std"]
+ffi = ["std"]
+python = ["ffi", "pyo3"]
+wasm = ["wasm-bindgen", "js-sys", "serde-wasm-bindgen"]
+temporal = ["tokio"]
+
+[[bench]]
+name = "wormgraph_bench"
+harness = false
