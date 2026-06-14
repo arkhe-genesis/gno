@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'cathedral-v14-sidecar'
+    static_configs:
+      - targets: ['inference-v14:8000']
+    metrics_path: /metrics
+
+  - job_name: 'cathedral-v12-orchestrator'
+    static_configs:
+      - targets: ['orchestrator-v12:9090']
+    metrics_path: /metrics

@@ -1,0 +1,22 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Instala dependências do sistema para compilação
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential cmake libopenblas-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY sidecar/ ./sidecar/
+
+ENV PYTHONPATH=/app
+ENV SIDECAR_HOST=0.0.0.0
+ENV SIDECAR_PORT=8000
+ENV GGUF_CACHE_DIR=/app/gguf_cache
+
+EXPOSE 8000
+
+CMD ["python", "-m", "sidecar.server"]
