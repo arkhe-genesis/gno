@@ -1,0 +1,25 @@
+# Cathedral ARKHE v14.0.0 — Dependências
+# Core
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+prometheus-client>=0.19.0
+
+# HTTP Client
+aiohttp>=3.9.0
+
+# GGUF Inference
+llama-cpp-python>=0.2.20
+
+# Cache
+cachetools>=5.3.0
+
+# Download de modelos
+huggingface-hub>=0.19.0
+
+# GPU (opcional)
+torch>=2.1.0
+
+# Testes
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-aiohttp>=1.0.0
