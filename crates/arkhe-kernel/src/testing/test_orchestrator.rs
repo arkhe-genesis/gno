@@ -5,22 +5,22 @@ use futures::future::join_all;
 
 use crate::testing::test_agent::{TestAgent, TestResult};
 use crate::testing::test_attestation::TestAttestationExt;
-use crate::testing::deps::{AttestationManager, AttestationSigner, ExecutionAttestation, SubagentSpawner, TrajectoryStoreTrait};
+use crate::testing::deps::{SubagentSpawner, AttestationManager, AttestationSigner, TrajectoryStore, ExecutionAttestation};
 
 pub struct TestOrchestrator {
-    pub spawner: Arc<SubagentSpawner>,
-    pub attestation_manager: Arc<AttestationManager>,
-    pub store: Arc<dyn TrajectoryStoreTrait>,
-    pub signer: Arc<dyn AttestationSigner>,
-    pub test_agents: Vec<Arc<dyn TestAgent>>,
+    spawner: Arc<SubagentSpawner>,
+    attestation_manager: Arc<AttestationManager>,
+    store: Arc<dyn TrajectoryStore + Send + Sync>,
+    signer: Arc<dyn AttestationSigner + Send + Sync>,
+    test_agents: Vec<Arc<dyn TestAgent>>,
 }
 
 impl TestOrchestrator {
     pub fn new(
         spawner: Arc<SubagentSpawner>,
         attestation_manager: Arc<AttestationManager>,
-        store: Arc<dyn TrajectoryStoreTrait>,
-        signer: Arc<dyn AttestationSigner>,
+        store: Arc<dyn TrajectoryStore + Send + Sync>,
+        signer: Arc<dyn AttestationSigner + Send + Sync>,
     ) -> Self {
         Self {
             spawner,
@@ -58,6 +58,49 @@ impl TestOrchestrator {
         for result in results {
             match result {
                 Ok(Ok(test_result)) => {
+                    let json = serde_json::to_string(&test_result).unwrap_or_default();
+                    let _ = self.store.record_trajectory(
+                        "test_orchestrator",
+                        &format!("test_result:{}", test_result.test_name),
+                        vec![format!("{:?}", test_result.test_type)],
+                        &json,
+                        vec![],
+                        vec![],
+                    ).await;
+                    test_results.push(test_result);
+                }
+                Ok(Err(e)) => error!("Erro no teste: {}", e),
+                Err(e) => error!("Panic no teste: {}", e),
+            }
+        }
+
+        self.generate_report(&test_results).await;
+        info!("✅ Testes concluídos: {} resultados", test_results.len());
+        test_results
+    }
+
+    #[instrument(name = "test_orchestrator.run_all_with_tracing", skip(self))]
+    pub async fn run_all_tests_with_tracing(&self) -> Vec<TestResult> {
+        info!("🚀 Executando todos os testes com OpenTelemetry...");
+
+        let context = crate::testing::test_agent::TestContext::new("orchestrator");
+
+        let handles: Vec<_> = self.test_agents.iter()
+            .map(|agent| {
+                let ctx = context.clone();
+                let agent_clone = agent.clone();
+                tokio::spawn(async move {
+                    agent_clone.run_test(&ctx).await
+                })
+            })
+            .collect();
+
+        let results = futures::future::join_all(handles).await;
+        let mut test_results = Vec::new();
+
+        for result in results {
+            match result {
+                Ok(Ok(test_result)) => {
                     if let Err(e) = test_result.store_test_result_as_attestation(
                         self.signer.as_ref(),
                         self.store.as_ref(),
@@ -72,7 +115,7 @@ impl TestOrchestrator {
         }
 
         self.generate_report(&test_results).await;
-        info!("✅ Testes concluídos: {} resultados", test_results.len());
+        info!("✅ Testes concluídos com tracing: {} resultados", test_results.len());
         test_results
     }
 
@@ -124,7 +167,7 @@ impl TestOrchestrator {
     pub async fn stats(&self) -> serde_json::Value {
         let trajs = self.store.list_trajectories().await;
         let test_results: Vec<_> = trajs.iter()
-            .filter(|t| t.goal.starts_with("test_attestation:"))
+            .filter(|t| t.goal.starts_with("test_result:"))
             .collect();
 
         json!({

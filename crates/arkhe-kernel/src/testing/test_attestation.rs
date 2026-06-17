@@ -1,7 +1,8 @@
+#![allow(unused_imports)]
 use serde::{Deserialize, Serialize};
 
-use crate::testing::test_agent::{TestResult};
-use crate::testing::deps::{ExecutionAttestation, TrajectoryStoreTrait, AttestationSigner};
+use crate::testing::test_agent::{TestResult, TestType};
+use crate::testing::deps::{ExecutionAttestation, AttestationSigner, TrajectoryStore};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TestAttestation {
@@ -40,7 +41,7 @@ impl TestAttestation {
 
     pub async fn persist(
         &self,
-        store: &dyn TrajectoryStoreTrait,
+        store: &dyn TrajectoryStore,
     ) -> Result<String, String> {
         let json = serde_json::to_string(self)
             .map_err(|e| format!("Serialization error: {}", e))?;
@@ -73,23 +74,21 @@ impl TestAttestation {
     }
 }
 
-use async_trait::async_trait;
-
-#[async_trait]
+#[async_trait::async_trait]
 pub trait TestAttestationExt {
     async fn store_test_result_as_attestation(
         &self,
         signer: &dyn AttestationSigner,
-        store: &dyn TrajectoryStoreTrait,
+        store: &dyn TrajectoryStore,
     ) -> Result<String, String>;
 }
 
-#[async_trait]
+#[async_trait::async_trait]
 impl TestAttestationExt for TestResult {
     async fn store_test_result_as_attestation(
         &self,
         signer: &dyn AttestationSigner,
-        store: &dyn TrajectoryStoreTrait,
+        store: &dyn TrajectoryStore,
     ) -> Result<String, String> {
         let mut att = TestAttestation::new(self.clone());
         att.sign(signer).await?;

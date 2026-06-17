@@ -5,25 +5,25 @@ use serde_json::json;
 use futures::future::join_all;
 
 use crate::testing::test_agent::{TestAgent, TestResult, TestType, TestContext};
-use crate::testing::deps::{AttestationSigner, SubagentSpawner};
+use crate::testing::deps::{SubagentSpawner, AttestationSigner};
 
 pub struct PerformanceTestAgent {
     name: String,
     spawner: Arc<SubagentSpawner>,
-    _signer: Arc<dyn AttestationSigner>,
+    signer: Arc<dyn AttestationSigner + Send + Sync>,
     default_concurrency: usize,
 }
 
 impl PerformanceTestAgent {
     pub fn new(
         spawner: Arc<SubagentSpawner>,
-        _signer: Arc<dyn AttestationSigner>,
+        signer: Arc<dyn AttestationSigner + Send + Sync>,
         default_concurrency: usize,
     ) -> Self {
         Self {
             name: "PerformanceTestAgent".to_string(),
             spawner,
-            _signer,
+            signer,
             default_concurrency,
         }
     }
@@ -108,7 +108,7 @@ impl TestAgent for PerformanceTestAgent {
             test_id: uuid::Uuid::new_v4().to_string(),
             test_name: self.name.clone(),
             test_type: TestType::Performance,
-            passed: total_executions >= 0 && duration_ms < context.timeout.as_millis() as u64,
+            passed: total_executions > 0 && duration_ms < context.timeout.as_millis() as u64,
             duration_ms,
             details,
             attestation_id: None,

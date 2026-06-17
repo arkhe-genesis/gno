@@ -55,8 +55,12 @@ impl TestAgent for ChaosTestAgent {
             .collect();
 
         for id in &to_kill {
-            let should_fail = thread_rng().gen_bool(self.failure_rate);
-            if should_fail {
+            // Need to drop rng before the await point
+            let simulate_failure = {
+                let mut rng = thread_rng();
+                rng.gen_bool(self.failure_rate)
+            };
+            if simulate_failure {
                 warn!("💥 Falha simulada ao terminar {}", id);
                 errors += 1;
             } else {

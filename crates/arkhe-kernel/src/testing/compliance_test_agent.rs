@@ -4,14 +4,14 @@ use tracing::{info, instrument};
 use serde_json::json;
 
 use crate::testing::test_agent::{TestAgent, TestResult, TestType, TestContext};
-use crate::testing::deps::{AttestationManager, AttestationSigner, GeometricPolicyEngine, TrajectoryStoreTrait};
+use crate::testing::deps::{AttestationManager, AttestationSigner, TrajectoryStore, GeometricPolicyEngine};
 
 pub struct ComplianceTestAgent {
     name: String,
     policy_engine: Arc<GeometricPolicyEngine>,
     attestation_manager: Arc<AttestationManager>,
-    store: Arc<dyn TrajectoryStoreTrait>,
-    _signer: Arc<dyn AttestationSigner>,
+    store: Arc<dyn TrajectoryStore + Send + Sync>,
+    signer: Arc<dyn AttestationSigner + Send + Sync>,
     required_policies: Vec<String>,
 }
 
@@ -19,8 +19,8 @@ impl ComplianceTestAgent {
     pub fn new(
         policy_engine: Arc<GeometricPolicyEngine>,
         attestation_manager: Arc<AttestationManager>,
-        store: Arc<dyn TrajectoryStoreTrait>,
-        _signer: Arc<dyn AttestationSigner>,
+        store: Arc<dyn TrajectoryStore + Send + Sync>,
+        signer: Arc<dyn AttestationSigner + Send + Sync>,
         required_policies: Vec<String>,
     ) -> Self {
         Self {
@@ -28,7 +28,7 @@ impl ComplianceTestAgent {
             policy_engine,
             attestation_manager,
             store,
-            _signer,
+            signer,
             required_policies,
         }
     }

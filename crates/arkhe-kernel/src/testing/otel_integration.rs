@@ -1,9 +1,11 @@
-use tracing::{info, error, span, Level, instrument};
-use async_trait::async_trait;
+#![allow(unused_imports)]
+use tracing::{info, error, span, Level};
+use tracing_opentelemetry::OpenTelemetrySpanExt;
+use opentelemetry::trace::{SpanKind, Status, TraceContextExt};
 
 use crate::testing::test_agent::{TestAgent, TestResult, TestContext};
 
-#[async_trait]
+#[async_trait::async_trait]
 pub trait TraceableTestAgent: TestAgent {
     async fn run_test_with_tracing(&self, context: &TestContext) -> Result<TestResult, String> {
         let span = span!(
@@ -35,4 +37,4 @@ pub trait TraceableTestAgent: TestAgent {
     }
 }
 
-impl<T: TestAgent + ?Sized> TraceableTestAgent for T {}
+impl<T: TestAgent> TraceableTestAgent for T {}

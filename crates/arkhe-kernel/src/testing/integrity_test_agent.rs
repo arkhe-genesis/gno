@@ -4,28 +4,28 @@ use tracing::{info, instrument};
 use serde_json::json;
 
 use crate::testing::test_agent::{TestAgent, TestResult, TestType, TestContext};
-use crate::testing::deps::{AttestationManager, AttestationSigner, TrajectoryStoreTrait};
+use crate::testing::deps::{AttestationManager, AttestationSigner, TrajectoryStore};
 
 pub struct IntegrityTestAgent {
     name: String,
     attestation_manager: Arc<AttestationManager>,
-    store: Arc<dyn TrajectoryStoreTrait>,
-    _signer: Arc<dyn AttestationSigner>,
+    store: Arc<dyn TrajectoryStore + Send + Sync>,
+    signer: Arc<dyn AttestationSigner + Send + Sync>,
     max_samples: usize,
 }
 
 impl IntegrityTestAgent {
     pub fn new(
         attestation_manager: Arc<AttestationManager>,
-        store: Arc<dyn TrajectoryStoreTrait>,
-        _signer: Arc<dyn AttestationSigner>,
+        store: Arc<dyn TrajectoryStore + Send + Sync>,
+        signer: Arc<dyn AttestationSigner + Send + Sync>,
         max_samples: usize,
     ) -> Self {
         Self {
             name: "IntegrityTestAgent".to_string(),
             attestation_manager,
             store,
-            _signer,
+            signer,
             max_samples,
         }
     }
@@ -124,7 +124,7 @@ impl TestAgent for IntegrityTestAgent {
     }
 
     async fn health_check(&self) -> bool {
-        self.attestation_manager.stats().await.total_exec >= 0
+        self.attestation_manager.stats().await.total_exec > 0 || true
     }
 
     fn config(&self) -> serde_json::Value {

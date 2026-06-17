@@ -6,8 +6,8 @@ pub mod chaos_test_agent;
 pub mod security_test_agent;
 pub mod compliance_test_agent;
 pub mod integration_test_agent;
-pub mod test_attestation;
 pub mod test_orchestrator;
+pub mod test_attestation;
 pub mod otel_integration;
 
 pub use test_agent::{TestAgent, TestResult, TestType, TestContext};

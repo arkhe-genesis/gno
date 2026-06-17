@@ -4,14 +4,14 @@ use tracing::{info, instrument};
 use serde_json::json;
 
 use crate::testing::test_agent::{TestAgent, TestResult, TestType, TestContext};
-use crate::testing::deps::{AttestationManager, AttestationSigner, SubagentSpawner, TrajectoryStoreTrait};
+use crate::testing::deps::{SubagentSpawner, AttestationManager, AttestationSigner, TrajectoryStore};
 
 pub struct IntegrationTestAgent {
     name: String,
     spawner: Arc<SubagentSpawner>,
     attestation_manager: Arc<AttestationManager>,
-    _store: Arc<dyn TrajectoryStoreTrait>,
-    _signer: Arc<dyn AttestationSigner>,
+    store: Arc<dyn TrajectoryStore + Send + Sync>,
+    signer: Arc<dyn AttestationSigner + Send + Sync>,
     test_count: usize,
 }
 
@@ -19,16 +19,16 @@ impl IntegrationTestAgent {
     pub fn new(
         spawner: Arc<SubagentSpawner>,
         attestation_manager: Arc<AttestationManager>,
-        _store: Arc<dyn TrajectoryStoreTrait>,
-        _signer: Arc<dyn AttestationSigner>,
+        store: Arc<dyn TrajectoryStore + Send + Sync>,
+        signer: Arc<dyn AttestationSigner + Send + Sync>,
         test_count: usize,
     ) -> Self {
         Self {
             name: "IntegrationTestAgent".to_string(),
             spawner,
             attestation_manager,
-            _store,
-            _signer,
+            store,
+            signer,
             test_count,
         }
     }
@@ -106,6 +106,8 @@ impl TestAgent for IntegrationTestAgent {
 
         let details = json!({
             "test_count": self.test_count,
+            "cycle_errors": all_errors.len(),
+            "concurrent_errors": all_errors.len(),
             "total_errors": all_errors.len(),
             "errors": all_errors,
             "integration_status": if passed { "healthy" } else { "degraded" },

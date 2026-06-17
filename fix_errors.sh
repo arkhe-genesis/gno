@@ -1,20 +1,13 @@
-#!/bin/bash
-cd crates/arkhe-wormgraph
+sed -i 's/Err(pyo3::exceptions::PyNotImplementedError::new_err("Implementação de extração de Arcs pendente"))/Ok(Self \{ inner: Arc::new(crate::testing::TestOrchestrator::new(Arc::new(crate::testing::deps::SubagentSpawner::new(Arc::new(RwLock::new(crate::testing::deps::IdentityAttestation::default())), Arc::new(crate::testing::deps::Ed25519Signer::new_random()), Arc::new(crate::testing::deps::GeometricPolicyEngine::new()), Arc::new(crate::testing::deps::AttestationManager::new(None)), Arc::new(crate::testing::deps::MemoryTrajectoryStore::new()), 10, crate::testing::deps::create_sandbox(crate::testing::deps::SandboxType::Process { cmd: "echo".to_string(), args: vec![] }), None)), Arc::new(crate::testing::deps::AttestationManager::new(None)), Arc::new(crate::testing::deps::MemoryTrajectoryStore::new()), Arc::new(crate::testing::deps::Ed25519Signer::new_random()))), rt: Runtime::new().unwrap() \})/g' crates/arkhe-kernel/src/lib.rs
 
-# Add ToString trait to core imports
-sed -i '1i #![allow(unused)]\nuse alloc::string::ToString;' src/wormgraph_ffi.rs
-sed -i '1i #![allow(unused)]\nuse alloc::string::ToString;' src/wormgraph_wasm.rs
-sed -i '1i use alloc::string::ToString;' src/wormgraph_dashboard.rs
+sed -i 's/Err(pyo3::exceptions::PyNotImplementedError::new_err("Registar IntegrityTestAgent pendente"))/self.inner.register_test_agent(Arc::new(crate::testing::IntegrityTestAgent::new(Arc::new(crate::testing::deps::AttestationManager::new(None)), Arc::new(crate::testing::deps::MemoryTrajectoryStore::new()), Arc::new(crate::testing::deps::Ed25519Signer::new_random()), _max_samples))); Ok(())/g' crates/arkhe-kernel/src/lib.rs
 
-# Fix pyo3 issue with type hints
-sed -i 's/.filter_map(|s| match s.as_str() {/.filter_map(|s: \&String| match s.as_str() {/g' src/wormgraph_ffi.rs
+sed -i 's/Err(pyo3::exceptions::PyNotImplementedError::new_err("Registar PerformanceTestAgent pendente"))/self.inner.register_test_agent(Arc::new(crate::testing::PerformanceTestAgent::new(Arc::new(crate::testing::deps::SubagentSpawner::new(Arc::new(RwLock::new(crate::testing::deps::IdentityAttestation::default())), Arc::new(crate::testing::deps::Ed25519Signer::new_random()), Arc::new(crate::testing::deps::GeometricPolicyEngine::new()), Arc::new(crate::testing::deps::AttestationManager::new(None)), Arc::new(crate::testing::deps::MemoryTrajectoryStore::new()), 10, crate::testing::deps::create_sandbox(crate::testing::deps::SandboxType::Process { cmd: "echo".to_string(), args: vec![] }), None)), Arc::new(crate::testing::deps::Ed25519Signer::new_random()), _concurrency))); Ok(())/g' crates/arkhe-kernel/src/lib.rs
 
-# Fix type hints in benchmark closure
-sed -i 's/|b, &size|/|b: \&mut criterion::Bencher, \&size|/g' src/wormgraph_benchmark.rs
-sed -i 's/|b, &_size|/|b: \&mut criterion::Bencher, \&_size|/g' src/wormgraph_benchmark.rs
-sed -i 's/|b|/|b: \&mut criterion::Bencher|/g' src/wormgraph_benchmark.rs
+sed -i 's/Err(pyo3::exceptions::PyNotImplementedError::new_err("Registar ChaosTestAgent pendente"))/self.inner.register_test_agent(Arc::new(crate::testing::ChaosTestAgent::new(Arc::new(crate::testing::deps::SubagentSpawner::new(Arc::new(RwLock::new(crate::testing::deps::IdentityAttestation::default())), Arc::new(crate::testing::deps::Ed25519Signer::new_random()), Arc::new(crate::testing::deps::GeometricPolicyEngine::new()), Arc::new(crate::testing::deps::AttestationManager::new(None)), Arc::new(crate::testing::deps::MemoryTrajectoryStore::new()), 10, crate::testing::deps::create_sandbox(crate::testing::deps::SandboxType::Process { cmd: "echo".to_string(), args: vec![] }), None)), _failure_rate, _kill_percentage))); Ok(())/g' crates/arkhe-kernel/src/lib.rs
 
-# Fix dashboard closure
-sed -i 's/.map(|other| other.domain()/.map(|other: \&\&FoundingFather| other.domain()/g' src/wormgraph_dashboard.rs
+sed -i 's/Err(pyo3::exceptions::PyNotImplementedError::new_err("Registar SecurityTestAgent pendente"))/self.inner.register_test_agent(Arc::new(crate::testing::SecurityTestAgent::new())); Ok(())/g' crates/arkhe-kernel/src/lib.rs
 
-cargo check --all-features
+sed -i 's/Err(pyo3::exceptions::PyNotImplementedError::new_err("Registar ComplianceTestAgent pendente"))/self.inner.register_test_agent(Arc::new(crate::testing::ComplianceTestAgent::new(Arc::new(crate::testing::deps::GeometricPolicyEngine::new()), Arc::new(crate::testing::deps::AttestationManager::new(None)), Arc::new(crate::testing::deps::MemoryTrajectoryStore::new()), Arc::new(crate::testing::deps::Ed25519Signer::new_random()), _required_policies))); Ok(())/g' crates/arkhe-kernel/src/lib.rs
+
+sed -i 's/Err(pyo3::exceptions::PyNotImplementedError::new_err("Registar IntegrationTestAgent pendente"))/self.inner.register_test_agent(Arc::new(crate::testing::IntegrationTestAgent::new(Arc::new(crate::testing::deps::SubagentSpawner::new(Arc::new(RwLock::new(crate::testing::deps::IdentityAttestation::default())), Arc::new(crate::testing::deps::Ed25519Signer::new_random()), Arc::new(crate::testing::deps::GeometricPolicyEngine::new()), Arc::new(crate::testing::deps::AttestationManager::new(None)), Arc::new(crate::testing::deps::MemoryTrajectoryStore::new()), 10, crate::testing::deps::create_sandbox(crate::testing::deps::SandboxType::Process { cmd: "echo".to_string(), args: vec![] }), None)), Arc::new(crate::testing::deps::AttestationManager::new(None)), Arc::new(crate::testing::deps::MemoryTrajectoryStore::new()), Arc::new(crate::testing::deps::Ed25519Signer::new_random()), _test_count))); Ok(())/g' crates/arkhe-kernel/src/lib.rs
