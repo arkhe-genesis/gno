@@ -1,0 +1,9 @@
+[package]
+name = "rust_data_plane"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+pyo3 = { version = "0.19.0", features = ["extension-module"] }
+tokio = { version = "1.0", features = ["full"] }
+arkhe-kernel = { path = "../crates/arkhe-kernel" }
