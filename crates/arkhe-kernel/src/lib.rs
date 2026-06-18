@@ -4,6 +4,7 @@ pub fn add(left: u64, right: u64) -> u64 {
 }
 
 pub mod testing;
+pub mod substrato_4004;
 
 #[cfg(test)]
 mod tests {
