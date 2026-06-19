@@ -1,0 +1,115 @@
+{
+  "dashboard": {
+    "title": "Cathedral ARKHE — Segurança & Seal",
+    "tags": ["cathedral", "security", "seal", "capability-tokens"],
+    "timezone": "browser",
+    "schemaVersion": 39,
+    "version": 1,
+    "refresh": "30s",
+    "panels": [
+      {
+        "title": "Tokens Ativos por Tipo",
+        "type": "piechart",
+        "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+        "targets": [
+          {
+            "expr": "sum by (token_type) (capability_tokens_active)",
+            "legendFormat": "{{token_type}}"
+          }
+        ],
+        "options": {
+          "displayLabels": ["name", "value", "percent"]
+        }
+      },
+      {
+        "title": "Tokens Revogados (Última hora)",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
+        "targets": [
+          {
+            "expr": "increase(capability_tokens_revoked_total[1h])"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": 0 },
+                { "color": "orange", "value": 5 },
+                { "color": "red", "value": 20 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "title": "Acessos Negados (Seal Blocked)",
+        "type": "stat",
+        "gridPos": { "h": 4, "w": 4, "x": 12, "y": 0 },
+        "targets": [
+          {
+            "expr": "increase(seal_access_denied_total[1h])"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": 0 },
+                { "color": "orange", "value": 10 },
+                { "color": "red", "value": 50 }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "title": "Políticas Seal Ativas",
+        "type": "stat",
+        "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 },
+        "targets": [
+          {
+            "expr": "seal_active_policies"
+          }
+        ]
+      },
+      {
+        "title": "Avaliações Seal por Minuto",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+        "targets": [
+          {
+            "expr": "rate(seal_evaluations_total[1m])",
+            "legendFormat": "{{status}}"
+          }
+        ]
+      },
+      {
+        "title": "Latência da Avaliação Seal (P95)",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(seal_evaluation_duration_seconds_bucket[5m]))",
+            "legendFormat": "P95 Latency"
+          }
+        ]
+      },
+      {
+        "title": "Eventos de Autenticação / Auditoria",
+        "type": "timeseries",
+        "gridPos": { "h": 8, "w": 24, "x": 0, "y": 16 },
+        "targets": [
+          {
+            "expr": "rate(wormgraph_events_total{event_type=~\"auth.*|security.*\"}[5m])",
+            "legendFormat": "{{event_type}}"
+          }
+        ]
+      }
+    ],
+    "time": { "from": "now-6h", "to": "now" }
+  },
+  "overwrite": true
+}
