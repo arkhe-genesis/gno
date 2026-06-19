@@ -1,0 +1,170 @@
+# alerts/cathedral_expanded_alerts.yml
+# Regras de alerta expandidas para o Alertmanager
+#
+# Selo: CATHEDRAL-ARKHE-8000-ALERTS-v2.1.0-2026-06-19
+
+groups:
+  - name: cathedral_mcp_core_alerts
+    interval: 30s
+    rules:
+      # ============================================================
+      # 1. Disponibilidade do MCP
+      # ============================================================
+      - alert: MCPDown
+        expr: up{job="cathedral-mcp"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: mcp-server
+        annotations:
+          summary: "MCP Server está fora do ar"
+          description: "O servidor {{ $labels.instance }} está fora do ar há mais de 1 minuto."
+
+      # ============================================================
+      # 2. Taxa de Erro MCP
+      # ============================================================
+      - alert: HighMCPErrorRate
+        expr: rate(mcp_requests_total{status=~"5.."}[5m]) / rate(mcp_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          component: mcp-server
+        annotations:
+          summary: "Alta taxa de erros no MCP Server"
+          description: "A taxa de erros (HTTP 5xx) está acima de 5% no servidor {{ $labels.instance }}."
+
+      # ============================================================
+      # 3. Latência do MCP
+      # ============================================================
+      - alert: HighMCPLatency
+        expr: histogram_quantile(0.95, rate(mcp_request_duration_seconds_bucket[5m])) > 2.0
+        for: 5m
+        labels:
+          severity: warning
+          component: mcp-server
+        annotations:
+          summary: "Alta latência no MCP Server"
+          description: "O percentil 95 da latência das requisições está acima de 2.0s no servidor {{ $labels.instance }}."
+
+  - name: cathedral_resilience_alerts
+    interval: 30s
+    rules:
+      # ============================================================
+      # 4. Circuit Breaker Aberto
+      # ============================================================
+      - alert: CircuitBreakerOpen
+        expr: circuit_breaker_state{state="open"} == 1
+        for: 30s
+        labels:
+          severity: critical
+          component: circuit-breaker
+        annotations:
+          summary: "Circuit Breaker aberto"
+          description: "O Circuit Breaker para o componente {{ $labels.component }} está aberto."
+
+      # ============================================================
+      # 5. Crescimento da DLQ
+      # ============================================================
+      - alert: DLQSizeHigh
+        expr: dlq_size > 500
+        for: 5m
+        labels:
+          severity: warning
+          component: dlq
+        annotations:
+          summary: "Tamanho da DLQ está alto"
+          description: "Existem mais de 500 mensagens na Dead Letter Queue."
+
+      - alert: DLQSizeCritical
+        expr: dlq_size > 2000
+        for: 5m
+        labels:
+          severity: critical
+          component: dlq
+        annotations:
+          summary: "Tamanho crítico da DLQ"
+          description: "Existem mais de 2000 mensagens na Dead Letter Queue. Necessária intervenção imediata."
+
+      # ============================================================
+      # 6. Poison Pills Detectados
+      # ============================================================
+      - alert: PoisonPillDetected
+        expr: increase(poison_pills_detected_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: warning
+          component: dlq
+        annotations:
+          summary: "Poison Pill detectado"
+          description: "Foram detectadas {{ $value }} Poison Pills (mensagens que falharam todas as retentativas) nos últimos 5 minutos."
+
+      # ============================================================
+      # 7. Last-Effort Engine Falhas
+      # ============================================================
+      - alert: LastEffortEscalated
+        expr: increase(last_effort_escalated_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: last-effort
+        annotations:
+          summary: "Recuperação Last-Effort Falhou"
+          description: "{{ $value }} mensagens falharam na recuperação do Last-Effort e foram escaladas para intervenção humana."
+
+  - name: cathedral_security_alerts
+    interval: 30s
+    rules:
+      # ============================================================
+      # 8. Alta taxa de acessos negados (Seal)
+      # ============================================================
+      - alert: HighSealAccessDenied
+        expr: rate(seal_access_denied_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          component: seal
+        annotations:
+          summary: "Alta taxa de acessos negados pelo Seal"
+          description: "A taxa de acessos negados pelo sistema Seal está acima de 10 por segundo nos últimos 5 minutos."
+
+      # ============================================================
+      # 9. Muitos tokens revogados recentemente
+      # ============================================================
+      - alert: SpikyTokenRevocations
+        expr: increase(capability_tokens_revoked_total[10m]) > 50
+        for: 1m
+        labels:
+          severity: warning
+          component: security
+        annotations:
+          summary: "Pico de revogação de tokens"
+          description: "Mais de 50 Capability Tokens foram revogados nos últimos 10 minutos. Isso pode indicar um incidente de segurança."
+
+  - name: cathedral_infrastructure_alerts
+    interval: 1m
+    rules:
+      # ============================================================
+      # 10. Uso de Memória do MCP
+      # ============================================================
+      - alert: MCPMemoryUsageHigh
+        expr: container_memory_usage_bytes{container="cathedral-mcp"} > 400000000 # ~400MB
+        for: 5m
+        labels:
+          severity: warning
+          component: infrastructure
+        annotations:
+          summary: "Uso alto de memória do MCP Server"
+          description: "O uso de memória do container cathedral-mcp ultrapassou 400MB."
+
+      # ============================================================
+      # 11. Conexões do PostgreSQL
+      # ============================================================
+      - alert: PostgresConnectionsHigh
+        expr: pg_stat_activity_count > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "Muitas conexões no PostgreSQL"
+          description: "O banco de dados do WormGraph está com mais de 80 conexões ativas."
