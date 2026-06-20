@@ -1,0 +1,14 @@
+[package]
+name = "cathedral-tee"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
+cathedral-lc3-vm = { path = "../cathedral-lc3-vm" }
+tokio = { workspace = true }
