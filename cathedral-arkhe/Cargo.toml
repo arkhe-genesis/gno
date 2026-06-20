@@ -1,0 +1,29 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/cathedral-scheduler",
+    "crates/cathedral-episodic",
+    "crates/cathedral-tee",
+    "crates/cathedral-fallback",
+    "crates/cathedral-agi",
+    "crates/cathedral-edge-agent",
+    "crates/cathedral-core",
+    "crates/cathedral-lc3-vm",
+]
+
+[workspace.dependencies]
+tokio = { version = "1.40", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+thiserror = "1.0"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+prometheus = { version = "0.13", features = ["process"] }
+uuid = { version = "1.0", features = ["v4"] }
+chrono = "0.4"
+rand = "0.8"
+async-trait = "0.1"
+reqwest = { version = "0.12", features = ["json"] }
+blake3 = "1.5"
+cathedral-lc3-vm = { path = "crates/cathedral-lc3-vm", version = "3.0.1" }

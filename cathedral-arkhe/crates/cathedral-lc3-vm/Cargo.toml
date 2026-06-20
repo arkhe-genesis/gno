@@ -1,0 +1,9 @@
+[package]
+name = "cathedral-lc3-vm"
+version = "3.0.1"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+tokio = { workspace = true }
+cathedral-scheduler = { path = "../cathedral-scheduler" }
