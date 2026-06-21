@@ -48,3 +48,4 @@ examples/gno.land/p/arkhe/fhe_artifacts/arkhe_jax/target
 __pycache__/
 target/
 **/target/
+Cargo.lock
