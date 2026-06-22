@@ -1,15 +1,42 @@
 [workspace]
 resolver = "2"
 members = [
+    "crates/cathedral-core",
+    "crates/cathedral-bridge",
+    "crates/cathedral-sdk",
+    "crates/cathedral-zk-risc0",
+    "crates/cathedral-zk-circuits",
+    "crates/cathedral-wormgraph",
+    "crates/cathedral-nostr",
+    "crates/cathedral-observer-5d",
+    "crates/cathedral-cem",
+    "crates/cathedral-shard-controller",
+    "crates/cathedral-atlassian",
+    "crates/cathedral-sail-pipeline",
+    "crates/cathedral-xtask",
+    "crates/cathedral-test-utils",
+    "crates/cathedral-hashtree",
+    "crates/cathedral-kernel-zk",
+    "crates/cathedral-x402-gateway",
+    "crates/cathedral-ethical-certification",
+    "crates/cathedral-contextual-amplification",
+    "crates/cathedral-plurality",
     "crates/cathedral-scheduler",
     "crates/cathedral-episodic",
     "crates/cathedral-tee",
     "crates/cathedral-fallback",
     "crates/cathedral-agi",
     "crates/cathedral-edge-agent",
-    "crates/cathedral-core",
     "crates/cathedral-lc3-vm",
 ]
+
+[workspace.package]
+version = "1.0.0"
+edition = "2021"
+authors = ["Cathedral ARKHE Architects <architect@arkhe.network>"]
+license = "Apache-2.0"
+repository = "https://github.com/cathedral-arkhe/cathedral-arkhe"
+rust-version = "1.91"
 
 [workspace.dependencies]
 tokio = { version = "1.40", features = ["full"] }
@@ -27,3 +54,15 @@ async-trait = "0.1"
 reqwest = { version = "0.12", features = ["json"] }
 blake3 = "1.5"
 cathedral-lc3-vm = { path = "crates/cathedral-lc3-vm", version = "3.0.1" }
+tonic = "0.10"
+
+# Ferramentas de desenvolvimento (globais)
+cargo-insta = "1.40"
+cargo-llvm-cov = "0.5"
+cargo-deadlinks = "0.9"
+cargo-sbom = "0.4"
+
+# Para o xtask
+clap = { version = "4.5", features = ["derive"] }
+colored = "2.1"
+which = "6.0"

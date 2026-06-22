@@ -1,0 +1,2 @@
+[alias]
+xtask = "run --package cathedral-xtask --bin cathedral-xtask --"
