@@ -1,0 +1,8 @@
+[workspace]
+members = [
+    "crates/arkhe-mcp",
+    "crates/arkhe-mem",
+    "crates/arkhe-core",
+    "crates/nip44"
+]
+resolver = "2"
