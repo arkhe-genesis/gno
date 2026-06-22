@@ -1,0 +1,107 @@
+[package]
+name = "cathedral-arkhe-33t"
+version = "4.0.0"
+edition = "2021"
+authors = ["Cathedral ARKHE Team <cathedral@arkhe.ai>"]
+description = "Cathedral ARKHE 33T v4.0 — ASI Architecture with Multiplatform Support"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/cathedral-arkhe/cathedral-33t"
+readme = "README.md"
+rust-version = "1.75"
+
+[workspace]
+members = []
+
+[features]
+default = ["tensor-backend-ndarray"]
+
+# Backends de tensor
+tensor-backend-ndarray = ["dep:ndarray", "dep:ndarray-rand"]
+tensor-backend-tch = ["dep:tch"]
+tensor-backend-candle = ["dep:candle"]
+tensor-backend-metal = ["candle/metal"]
+# tensor-backend-directml = ["candle/directml"] # Candle 0.7 does not have directml
+tensor-backend-nnapi = []
+
+# Funcionalidades opcionais
+ssm = []           # SSM Engine (Mamba-2)
+symbolic = []      # Neuro-Symbolic Reasoner
+swarm = []         # Swarm Coordination Layer
+consistency = []   # Behavioral Consistency Engine
+
+# Perfis de deployment
+deployment-server = ["tensor-backend-tch", "ssm", "symbolic", "swarm", "consistency"]
+deployment-desktop = ["tensor-backend-candle", "ssm"]
+deployment-mobile = ["tensor-backend-candle", "tensor-backend-metal", "tensor-backend-nnapi"]
+
+[dependencies]
+# Core
+tokio = { version = "1.40", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+anyhow = "1.0"
+thiserror = "2.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+once_cell = "1.19"
+rand = "0.8"
+rand_distr = "0.4"
+num-traits = "0.2"
+log = "0.4"
+
+# Backends
+ndarray = { version = "0.15", features = ["rayon", "serde"], optional = true }
+ndarray-rand = { version = "0.14", optional = true }
+tch = { version = "0.17", optional = true }
+candle = { package = "candle-core", version = "0.7", optional = true, features = ["cuda"] }
+
+# Utilidades
+uuid = { version = "1.6", features = ["v4"] }
+chrono = "0.4"
+bincode = "1.3"
+hex = "0.4"
+rayon = "1.8"
+
+# Para Android/iOS
+jni = { version = "0.21", optional = true }     # Android
+objc = { version = "0.2", optional = true }     # iOS
+
+[target.'cfg(target_os = "android")'.dependencies]
+jni = "0.21"
+android_logger = "0.13"
+
+[target.'cfg(target_os = "ios")'.dependencies]
+objc = "0.2"
+
+[dev-dependencies]
+criterion = "0.5"
+mockito = "1.0"
+tokio-test = "0.4"
+
+[[bench]]
+name = "routing"
+harness = false
+
+[[bin]]
+name = "train"
+path = "src/bin/train.rs"
+[[bin]]
+name = "infer"
+path = "src/bin/infer.rs"
+[[bin]]
+name = "serve"
+path = "src/bin/serve.rs"
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
+strip = true
+
+[profile.dev]
+opt-level = 1
+
+# Configuração para compilação cruzada
+[package.metadata.cross]
+target = "x86_64-unknown-linux-gnu"  # padrão
