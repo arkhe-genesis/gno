@@ -1,85 +1,227 @@
-.PHONY: help
-help:
-	@echo "Available make commands:"
-	@cat Makefile | grep '^[a-z][^:]*:' | grep -v 'install_' | cut -d: -f1 | sort | sed 's/^/  /'
+# Cathedral-LLM — Makefile
+# Arquiteto ORCID 0009-0005-2697-4668
 
-# command to run dependency utilities, like goimports.
-rundep=go run -modfile misc/devdeps/go.mod
+.PHONY: all build test lint fmt check clean install dev docs bench release docker
 
-########################################
-# Environment variables
-# You can overwrite any of the following by passing a different value on the
-# command line, ie. `CGO_ENABLED=1 make test`.
-# NOTE: these are not very useful in this makefile, but they serve as
-# documentation for sub-makefiles.
+# Variáveis
+RUSTFLAGS ?= "-C target-cpu=native"
+CARGO := cargo
+DOCKER := docker
+PYTHON := python3
 
-# disable cgo by default. cgo requires some additional dependencies in some
-# cases, and is not strictly required by any tm2 code.
-CGO_ENABLED ?= 0
-export CGO_ENABLED
-# test suite flags.
-GOTEST_FLAGS ?= -v -p 1 -timeout=30m
-# when running `make tidy`, use it to check that the go.mods are up-to-date.
-VERIFY_MOD_SUMS ?= false
+# Default target
+all: fmt lint test build
 
-########################################
-# Dev tools
-.PHONY: install
-install: install.gnokey install.gno install.gnodev
+# === BUILD ===
 
-# shortcuts to frequently used commands from sub-components.
-.PHONY: install.gnokey
-install.gnokey:
-	$(MAKE) --no-print-directory -C ./gno.land	install.gnokey
-	@# \033[0;32m ... \033[0m is ansi for green text.
-	@printf "\033[0;32m[+] 'gnokey' has been installed. Read more in ./gno.land/\033[0m\n"
-.PHONY: install.gno
-install.gno:
-	$(MAKE) --no-print-directory -C ./gnovm	install
-	@printf "\033[0;32m[+] 'gno' has been installed. Read more in ./gnovm/\033[0m\n"
-.PHONY: install.gnodev
-install.gnodev:
-	$(MAKE) --no-print-directory -C ./contribs/gnodev install
-	@printf "\033[0;32m[+] 'gnodev' has been installed. Read more in ./contribs/gnodev/\033[0m\n"
-.PHONY: install.gnobro
-install.gnobro:
-	$(MAKE) --no-print-directory -C ./contribs/gnobro install
-	@printf "\033[0;32m[+] 'gnobro' has been installed. Read more in ./contribs/gnobro/\033[0m\n"
+build:
+	@echo "🏛️  Building Cathedral-LLM workspace..."
+	$(CARGO) build --workspace
 
+build-release:
+	@echo "🏛️  Building Cathedral-LLM (release)..."
+	RUSTFLAGS=$(RUSTFLAGS) $(CARGO) build --workspace --release
 
-# old aliases
-.PHONY: install_gnokey
-install_gnokey: install.gnokey
-.PHONY: install_gno
-install_gno: install.gno
+build-core:
+	@echo "🏛️  Building cathedral-llm-core..."
+	$(CARGO) build -p cathedral-llm-core --release
 
-.PHONY: test
-test: test.components
+build-runtime:
+	@echo "🏛️  Building cathedral-inference-runtime..."
+	$(CARGO) build -p cathedral-inference-runtime --release
 
-.PHONY: test.components
-test.components:
-	$(MAKE) --no-print-directory -C tm2      test
-	$(MAKE) --no-print-directory -C gnovm    test
-	$(MAKE) --no-print-directory -C gno.land test
-	$(MAKE) --no-print-directory -C examples test
-	$(MAKE) --no-print-directory -C misc     test
+build-api:
+	@echo "🏛️  Building cathedral-api..."
+	$(CARGO) build -p cathedral-api --release
 
-.PHONY: fmt
-fmt:
-	$(MAKE) --no-print-directory -C tm2      fmt
-	$(MAKE) --no-print-directory -C gnovm    fmt
-	$(MAKE) --no-print-directory -C gno.land fmt
-	$(MAKE) --no-print-directory -C examples fmt
-	$(MAKE) --no-print-directory -C contribs fmt
+build-cli:
+	@echo "🏛️  Building cathedral-cli..."
+	$(CARGO) build -p cathedral-cli --release
 
-.PHONY: lint
+# === TEST ===
+
+test:
+	@echo "🏛️  Running all tests..."
+	$(CARGO) test --workspace
+
+test-core:
+	@echo "🏛️  Testing cathedral-llm-core..."
+	$(CARGO) test -p cathedral-llm-core
+
+test-runtime:
+	@echo "🏛️  Testing cathedral-inference-runtime..."
+	$(CARGO) test -p cathedral-inference-runtime
+
+test-e2e:
+	@echo "🏛️  Running end-to-end tests..."
+	$(CARGO) test -p cathedral-tests -- --test-threads=1 --nocapture
+
+test-zk:
+	@echo "🏛️  Testing ZK proofs..."
+	$(CARGO) test -p cathedral-zk
+
+test-identity:
+	@echo "🏛️  Testing identity verification..."
+	$(CARGO) test -p cathedral-identity
+
+# === LINT ===
+
 lint:
-	$(rundep) github.com/golangci/golangci-lint/v2/cmd/golangci-lint run --config .github/golangci.yml
+	@echo "🏛️  Running clippy..."
+	$(CARGO) clippy --workspace --all-targets --all-features -- -D warnings
 
-.PHONY: tidy
-tidy:
-	$(MAKE) --no-print-directory -C misc     tidy
+fmt:
+	@echo "🏛️  Formatting code..."
+	$(CARGO) fmt --all
 
-.PHONY: mocks
-mocks:
-	$(rundep) github.com/golang/mock/mockgen -source=tm2/pkg/db/types.go -package mockdb -destination tm2/pkg/db/mockdb/mockdb.go
+check:
+	@echo "🏛️  Running cargo check..."
+	$(CARGO) check --workspace
+
+deny:
+	@echo "🏛️  Running cargo deny..."
+	cargo deny check
+
+# === DOCUMENTATION ===
+
+docs:
+	@echo "🏛️  Building documentation..."
+	$(CARGO) doc --workspace --no-deps --open
+
+docs-private:
+	@echo "🏛️  Building documentation (private items)..."
+	$(CARGO) doc --workspace --document-private-items
+
+# === BENCHMARKS ===
+
+bench:
+	@echo "🏛️  Running benchmarks..."
+	$(CARGO) bench -p cathedral-benchmarks
+
+bench-inference:
+	@echo "🏛️  Benchmarking inference..."
+	$(CARGO) bench -p cathedral-benchmarks -- inference
+
+bench-zk:
+	@echo "🏛️  Benchmarking ZK proofs..."
+	$(CARGO) bench -p cathedral-benchmarks -- zk
+
+# === DEVELOPMENT ===
+
+dev:
+	@echo "🏛️  Starting development environment..."
+	docker-compose -f docker/docker-compose.dev.yml up -d
+
+setup:
+	@echo "🏛️  Setting up development environment..."
+	@bash scripts/setup-dev.sh
+
+bootstrap:
+	@echo "🏛️  Bootstrapping Cathedral-LLM..."
+	@bash scripts/bootstrap.sh
+
+# === DOCKER ===
+
+docker-build:
+	@echo "🏛️  Building Docker images..."
+	$(DOCKER) build -f docker/Dockerfile.base -t cathedral-llm:base .
+	$(DOCKER) build -f docker/Dockerfile.cpu -t cathedral-llm:cpu .
+
+docker-run:
+	@echo "🏛️  Running Cathedral-LLM in Docker..."
+	docker-compose -f docker/docker-compose.yml up -d
+
+docker-stop:
+	@echo "🏛️  Stopping Cathedral-LLM containers..."
+	docker-compose -f docker/docker-compose.yml down
+
+# === MODELS ===
+
+model-download:
+	@echo "🏛️  Downloading model checkpoints..."
+	$(PYTHON) models/huggingface/download.py
+
+model-convert:
+	@echo "🏛️  Converting model format..."
+	$(PYTHON) tools/model_converter/convert_from_hf.py
+
+model-quantize:
+	@echo "🏛️  Quantizing model..."
+	$(PYTHON) tools/quantizer/quantize.py
+
+# === DATA ===
+
+data-generate:
+	@echo "🏛️  Generating synthetic training data..."
+	$(PYTHON) scripts/generate-identity-data.py
+	$(PYTHON) data/synthetic/generate_reasoning_data.py
+	$(PYTHON) data/synthetic/generate_ethical_data.py
+
+# === DEPLOYMENT ===
+
+deploy:
+	@echo "🏛️  Deploying Cathedral-LLM..."
+	@bash scripts/deploy-model.sh
+
+release:
+	@echo "🏛️  Creating release..."
+	$(CARGO) build --workspace --release
+	@bash scripts/package-release.sh
+
+# === UTILITIES ===
+
+clean:
+	@echo "🏛️  Cleaning build artifacts..."
+	$(CARGO) clean
+	@rm -rf target/
+	@find . -name "*.rs.bk" -delete
+
+install:
+	@echo "🏛️  Installing Cathedral-LLM CLI..."
+	$(CARGO) install --path crates/cathedral-cli
+
+update:
+	@echo "🏛️  Updating dependencies..."
+	$(CARGO) update
+
+verify-zk:
+	@echo "🏛️  Verifying ZK proofs..."
+	$(PYTHON) scripts/verify-zk-proofs.py
+
+# === HELP ===
+
+help:
+	@echo "🏛️  Cathedral-LLM — Available targets:"
+	@echo ""
+	@echo "  Build:"
+	@echo "    build, build-release, build-core, build-runtime, build-api, build-cli"
+	@echo ""
+	@echo "  Test:"
+	@echo "    test, test-core, test-runtime, test-e2e, test-zk, test-identity"
+	@echo ""
+	@echo "  Lint:"
+	@echo "    lint, fmt, check, deny"
+	@echo ""
+	@echo "  Docs:"
+	@echo "    docs, docs-private"
+	@echo ""
+	@echo "  Benchmarks:"
+	@echo "    bench, bench-inference, bench-zk"
+	@echo ""
+	@echo "  Development:"
+	@echo "    dev, setup, bootstrap"
+	@echo ""
+	@echo "  Docker:"
+	@echo "    docker-build, docker-run, docker-stop"
+	@echo ""
+	@echo "  Models:"
+	@echo "    model-download, model-convert, model-quantize"
+	@echo ""
+	@echo "  Data:"
+	@echo "    data-generate"
+	@echo ""
+	@echo "  Deployment:"
+	@echo "    deploy, release"
+	@echo ""
+	@echo "  Utilities:"
+	@echo "    clean, install, update, verify-zk, help"

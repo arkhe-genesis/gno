@@ -1,0 +1,90 @@
+[workspace]
+members = [
+    "crates/cathedral-llm-core",
+    "crates/cathedral-inference-runtime",
+    "crates/cathedral-identity",
+    "crates/cathedral-reputation",
+    "crates/cathedral-wormgraph",
+    "crates/cathedral-zk",
+    "crates/cathedral-arkheobex",
+    "crates/cathedral-observer",
+    "crates/cathedral-api",
+    "crates/cathedral-cli",
+    "crates/cathedral-benchmarks",
+    "crates/cathedral-tests"
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Cathedral ARKHE ORCHESTRATOR <orcid:0009-0005-2697-4668>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/cathedral-os/cathedral-llm"
+
+[workspace.dependencies]
+# Async runtime
+tokio = { version = "1.37", features = ["full", "tracing"] }
+tokio-util = "0.7"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+bincode = "1.3"
+
+# HTTP/gRPC
+axum = "0.7"
+tower = "0.4"
+tower-http = "0.5"
+tonic = "0.11"
+hyper = "1.2"
+
+# WebSocket
+tokio-tungstenite = "0.21"
+
+# Database / Cache
+dashmap = "5.5"
+redis = { version = "0.25", features = ["tokio-comp"] }
+
+# Metrics / Observability
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+prometheus = "0.13"
+
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Testing
+tokio-test = "0.4"
+mockall = "0.12"
+criterion = { version = "0.5", features = ["async_tokio"] }
+
+# CLI
+clap = { version = "4.5", features = ["derive"] }
+indicatif = "0.17"
+console = "0.15"
+
+# Utilities
+uuid = { version = "1.8", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+regex = "1.10"
+once_cell = "1.19"
+hex = "0.4"
+dirs = "5.0"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.dev]
+opt-level = 0
+debug = true
+
+[profile.bench]
+inherits = "release"
+debug = true
