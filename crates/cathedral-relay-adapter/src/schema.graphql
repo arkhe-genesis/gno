@@ -1,0 +1,30 @@
+# Schema do Ponder Indexer (Relay Vaults)
+# Fonte: https://indexer.relay.link/graphql
+
+type Vault {
+  address: String!
+  asset: String!
+  name: String!
+  symbol: String!
+  decimals: Int!
+  totalSupply: String!
+  totalAssets: String!
+  apy: Float
+}
+
+type UserVault {
+  user: String!
+  asset: String!
+  totalYieldEarned: String!
+  totalShares: String!
+}
+
+type Query {
+  vaults: [Vault!]!
+  userVaults(where: UserVaultFilter): [UserVault!]!
+}
+
+input UserVaultFilter {
+  user: String
+  asset: String
+}

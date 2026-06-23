@@ -1,0 +1,10 @@
+[package]
+name = "cathedral-tailscale"
+version = "3.0.0"
+edition = "2021"
+
+[dependencies]
+prometheus = "0.13"
+hex = "0.4"
+rand = "0.8"
+blake3 = "1.5"
