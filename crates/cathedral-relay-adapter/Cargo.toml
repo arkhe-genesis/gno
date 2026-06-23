@@ -1,0 +1,50 @@
+[package]
+name = "cathedral-relay-adapter"
+version = "2.0.0"
+edition = "2021"
+rust-version = "1.94"
+license = "Apache-2.0"
+description = "Relay Vaults integration for Cathedral-OS (yield + cross-chain payments)"
+
+[dependencies]
+# Alloy (unificado para EVM interação)
+alloy = { version = "0.6", features = [
+    "full",
+    "node-bindings",
+    "signers",
+    "signer-local",
+    "provider-http",
+    "transport-http",
+    "contract",
+    "json-abi",
+] }
+
+# Solidity bindings (via abigen)
+ethers-contract = "2.0"
+ethers-providers = "2.0"
+ethers-signers = "2.0"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# HTTP client
+reqwest = { version = "0.13", features = ["json", "rustls"] }
+
+# Async
+tokio = { version = "1.52", features = ["full"] }
+async-trait = "0.1"
+
+# Utilities
+thiserror = "2.0"
+tracing = "0.1"
+hex = "0.4"
+anyhow = "1.0"
+
+# PQC (para atestação ML-DSA)
+cathedral-pqc = { path = "../cathedral-pqc" }
+blake3 = "1.5"
+
+[dev-dependencies]
+mockito = "1.0"
+rand = "0.8"

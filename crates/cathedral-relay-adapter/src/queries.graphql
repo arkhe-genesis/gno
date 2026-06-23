@@ -1,0 +1,20 @@
+# Queries GraphQL para o Relay Vaults Indexer
+
+query GetYieldEarned($user: String!, $asset: String!) {
+  userVaults(where: { user: $user, asset: $asset }) {
+    totalYieldEarned
+  }
+}
+
+query ListVaults {
+  vaults {
+    address
+    asset
+    name
+    symbol
+    decimals
+    totalSupply
+    totalAssets
+    apy
+  }
+}
