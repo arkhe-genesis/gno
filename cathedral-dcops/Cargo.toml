@@ -1,0 +1,71 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/cathedral-dcops-core",
+    "crates/cathedral-agent-monitoring",
+    "crates/cathedral-agent-capacity",
+    "crates/cathedral-agent-energy",
+    "crates/cathedral-agent-security",
+    "crates/cathedral-agent-compliance",
+    "crates/cathedral-dcops-runtime",
+    "crates/cathedral-identity",
+    "crates/cathedral-wormgraph",
+    "crates/cathedral-zk",
+    "crates/cathedral-arkheobex",
+    "crates/cathedral-observer",
+    "crates/cathedral-resilience",
+    "crates/cathedral-api",
+    "crates/cathedral-cli",
+    "crates/cathedral-self-improve",
+    "crates/cathedral-test-support",
+    "crates/cathedral-xtask"
+]
+
+[workspace.dependencies]
+sqlx = { version = "0.8", features = ["runtime-tokio", "sqlite", "postgres", "migrate"] }
+sqlx-macros = "0.9"
+tracing = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = { version = "1.10", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+anyhow = "1.0"
+thiserror = "2.0"
+dashmap = "6.1"
+tokio = { version = "1.40", features = ["full"] }
+async-trait = "0.1"
+clap = { version = "4.5", features = ["derive"] }
+ed25519-dalek = { version = "2.1", features = ["rand_core"] }
+rand = "0.8"
+hex = "0.4"
+base64 = "0.22"
+tokio-tungstenite = "0.26"
+walkdir = "2.5"
+syn = { version = "2.0", features = ["full"] }
+criterion = "0.5"
+pqcrypto-dilithium = "0.3"
+
+cathedral-dcops-core = { path = "crates/cathedral-dcops-core" }
+cathedral-agent-monitoring = { path = "crates/cathedral-agent-monitoring" }
+cathedral-agent-capacity = { path = "crates/cathedral-agent-capacity" }
+cathedral-agent-energy = { path = "crates/cathedral-agent-energy" }
+cathedral-agent-security = { path = "crates/cathedral-agent-security" }
+cathedral-agent-compliance = { path = "crates/cathedral-agent-compliance" }
+cathedral-dcops-runtime = { path = "crates/cathedral-dcops-runtime" }
+cathedral-identity = { path = "crates/cathedral-identity" }
+cathedral-wormgraph = { path = "crates/cathedral-wormgraph" }
+cathedral-zk = { path = "crates/cathedral-zk" }
+cathedral-arkheobex = { path = "crates/cathedral-arkheobex" }
+cathedral-observer = { path = "crates/cathedral-observer" }
+cathedral-resilience = { path = "crates/cathedral-resilience" }
+cathedral-api = { path = "crates/cathedral-api" }
+cathedral-cli = { path = "crates/cathedral-cli" }
+cathedral-self-improve = { path = "crates/cathedral-self-improve" }
+cathedral-test-support = { path = "crates/cathedral-test-support" }
+cathedral-xtask = { path = "crates/cathedral-xtask" }
+[workspace.dependencies.axum]
+version = "0.7"
+features = ["ws"]
+
+[workspace.dependencies.futures-util]
+version = "0.3"

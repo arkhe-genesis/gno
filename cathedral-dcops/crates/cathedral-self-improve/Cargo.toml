@@ -1,0 +1,11 @@
+[package]
+name = "cathedral-self-improve"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+cathedral-wormgraph.workspace = true
+syn.workspace = true
+serde_json.workspace = true
+walkdir.workspace = true
+tokio.workspace = true

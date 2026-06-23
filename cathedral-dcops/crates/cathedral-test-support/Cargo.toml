@@ -1,0 +1,22 @@
+[package]
+name = "cathedral-test-support"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+cathedral-wormgraph.workspace = true
+dashmap.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+ed25519-dalek.workspace = true
+hex.workspace = true
+rand.workspace = true
+async-trait.workspace = true
+
+[[bench]]
+name = "persistence_bench"
+harness = false
+path = "../../benches/persistence_bench.rs"
+[dev-dependencies]
+criterion = { workspace = true }
+tokio = { workspace = true }
