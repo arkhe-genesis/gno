@@ -1,0 +1,21 @@
+[package]
+name = "cathedral-agents"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cathedral-taproot-bridge = { path = "../cathedral-taproot-bridge" }
+cathedral-identity = { path = "../cathedral-identity" }
+cathedral-wormgraph = { path = "../cathedral-wormgraph" }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = { version = "1.0", features = ["v4"] }
+chrono = "0.4"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+hex = "0.4"
+
+[[bin]]
+name = "rfq_agent"
+path = "src/bin/rfq_agent.rs"

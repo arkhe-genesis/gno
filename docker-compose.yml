@@ -1,0 +1,111 @@
+version: '3.8'
+
+services:
+  # Bitcoin Regtest Node
+  bitcoind:
+    image: lncm/bitcoind:latest
+    command:
+      - -regtest
+      - -rpcallowip=0.0.0.0
+      - -rpcbind=0.0.0.0
+      - -rpcuser=devuser
+      - -rpcpassword=devpass
+      - -server
+      - -txindex=1
+      - -deprecatedrpc=generate
+    ports:
+      - "18443:18443"   # RPC
+      - "18444:18444"   # P2P
+    volumes:
+      - ./data/bitcoin:/data
+
+  # LND - Alice
+  lnd-alice:
+    image: lightninglabs/lnd:v0.17.0-beta
+    command:
+      - --bitcoin.regtest
+      - --bitcoin.active
+      - --bitcoin.node=bitcoind
+      - --bitcoind.rpcuser=devuser
+      - --bitcoind.rpcpass=devpass
+      - --bitcoind.zmqpubrawblock=tcp://bitcoind:28332
+      - --bitcoind.zmqpubrawtx=tcp://bitcoind:28333
+      - --accept-keysend
+      - --rpclisten=0.0.0.0:10009
+      - --restlisten=0.0.0.0:8080
+      - --tlsextradomain=alice
+      - --no-macaroons
+    depends_on:
+      - bitcoind
+    ports:
+      - "10009:10009"   # gRPC
+      - "8080:8080"     # REST
+    volumes:
+      - ./data/lnd-alice:/root/.lnd
+
+  # LND - Bob
+  lnd-bob:
+    image: lightninglabs/lnd:v0.17.0-beta
+    command:
+      - --bitcoin.regtest
+      - --bitcoin.active
+      - --bitcoin.node=bitcoind
+      - --bitcoind.rpcuser=devuser
+      - --bitcoind.rpcpass=devpass
+      - --bitcoind.zmqpubrawblock=tcp://bitcoind:28332
+      - --bitcoind.zmqpubrawtx=tcp://bitcoind:28333
+      - --accept-keysend
+      - --rpclisten=0.0.0.0:10009
+      - --restlisten=0.0.0.0:8080
+      - --tlsextradomain=bob
+      - --no-macaroons
+    depends_on:
+      - bitcoind
+    ports:
+      - "10010:10009"   # gRPC
+      - "8081:8080"     # REST
+    volumes:
+      - ./data/lnd-bob:/root/.lnd
+
+  # Taproot Assets Daemon - Alice
+  tapd-alice:
+    image: lightninglabs/taproot-assets:v0.8.0
+    command:
+      - --lnd-address=lnd-alice:10009
+      - --tapd-address=0.0.0.0:10029
+      - --network=regtest
+      - --debuglevel=debug
+      - --no-macaroons
+    depends_on:
+      - lnd-alice
+    ports:
+      - "10029:10029"   # gRPC
+      - "8089:8089"     # REST
+    volumes:
+      - ./data/tapd-alice:/root/.taproot-assets
+
+  # Taproot Assets Daemon - Bob
+  tapd-bob:
+    image: lightninglabs/taproot-assets:v0.8.0
+    command:
+      - --lnd-address=lnd-bob:10009
+      - --tapd-address=0.0.0.0:10029
+      - --network=regtest
+      - --debuglevel=debug
+      - --no-macaroons
+    depends_on:
+      - lnd-bob
+    ports:
+      - "10030:10029"   # gRPC
+      - "8090:8089"     # REST
+    volumes:
+      - ./data/tapd-bob:/root/.taproot-assets
+
+  # Price Oracle Mock (para RFQ)
+  oracle-mock:
+    image: lightninglabs/taproot-assets:v0.8.0
+    command:
+      - --mock-oracle
+      - --mock-oracle-rate=100000000  # 1 asset = 1 BTC
+    ports:
+      - "10031:10031"
