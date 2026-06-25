@@ -5,3 +5,6 @@ pub enum ModelTier {
     Standard,
     Lite,
 }
+
+pub mod model;
+pub use model::{LlamaEngine, ModelConfig};

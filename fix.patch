@@ -1,0 +1,21 @@
+--- crates/cathedral-llm-core/src/model.rs
++++ crates/cathedral-llm-core/src/model.rs
+@@ -102,14 +102,16 @@
+         let eos_token = self.model.token_eos();
+         let mut generated = 0;
+         let mut output_tokens = Vec::new();
++
++        let mut decoder = encoding_rs::UTF_8.new_decoder();
+
+         while generated < max_tokens {
+             // ✅ CORREÇÃO: sample requer &mut self
+             let token = sampler.sample(&ctx, -1);
+             if token == eos_token {
+                 break;
+             }
+
+             // ✅ CORREÇÃO: token_to_piece com 4 parâmetros
+             let piece = self.model
+-                .token_to_piece(token, &mut encoding_rs::UTF_8.new_decoder(), false, None)
++                .token_to_piece(token, &mut decoder, false, None)
+                 .map_err(|e| e.to_string())?;
