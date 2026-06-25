@@ -11,7 +11,9 @@ members = [
     "crates/cathedral-api",
     "crates/cathedral-cli",
     "crates/cathedral-benchmarks",
-    "crates/cathedral-tests"
+    "crates/cathedral-tests",
+    "crates/cathedral-taproot-bridge",
+    "crates/cathedral-agents"
 ]
 resolver = "2"
 
