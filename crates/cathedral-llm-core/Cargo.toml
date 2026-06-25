@@ -7,3 +7,6 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
+llama-cpp-2 = "0.1.150"
+tracing = "0.1"
+encoding_rs = "0.8.35"
