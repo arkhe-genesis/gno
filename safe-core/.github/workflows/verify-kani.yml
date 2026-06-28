@@ -1,0 +1,19 @@
+name: Verify Kani
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Nightly
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Kani
+      uses: model-checking/kani-github-action@v1.0
+    - name: Run Kani
+      run: cargo kani

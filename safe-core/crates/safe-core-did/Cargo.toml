@@ -1,0 +1,8 @@
+[package]
+name = "safe-core-did"
+version = "0.1.0"
+edition = "2024"
+authors = ["Arkhe(n) Research Group"]
+
+[dependencies]
+safe-core-crypto = { path = "../safe-core-crypto" }

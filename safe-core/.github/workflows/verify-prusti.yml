@@ -1,0 +1,25 @@
+name: Verify Prusti
+
+on:
+  schedule:
+    - cron: '0 1 * * *' # Nightly
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Rust
+      uses: dtolnay/rust-toolchain@nightly
+      with:
+        toolchain: nightly-2026-06-01
+    - name: Install Prusti
+      run: |
+        cargo install prusti-contracts
+        # Placeholder for actual Prusti installation which might be complex
+    - name: Run Prusti
+      run: cargo prusti
