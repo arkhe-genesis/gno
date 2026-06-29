@@ -1,0 +1,11 @@
+[package]
+name = "safe-core-core"
+version.workspace = true
+edition.workspace = true
+[dependencies]
+serde = { workspace = true }
+thiserror = { workspace = true }
+blake3 = { workspace = true }
+hex = { workspace = true }
+chrono = { workspace = true }
+uuid = { workspace = true }

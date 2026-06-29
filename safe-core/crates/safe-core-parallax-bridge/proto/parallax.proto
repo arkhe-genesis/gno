@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package parallax;
+
+service InferenceService {
+  rpc Infer (InferRequest) returns (InferResponse);
+  rpc Health (HealthRequest) returns (HealthResponse);
+  rpc ListModels (ListModelsRequest) returns (ListModelsResponse);
+  rpc Embed (EmbedRequest) returns (EmbedResponse);
+}
+
+message InferRequest {
+  string model_name = 1;
+  string prompt = 2;
+  repeated ChatMessage messages = 3;
+  SamplingParams params = 4;
+  map<string, string> metadata = 5;
+}
+
+message ChatMessage {
+  string role = 1;
+  string content = 2;
+}
+
+message SamplingParams {
+  float temperature = 1;
+  float top_p = 2;
+  int32 top_k = 3;
+  int32 max_tokens = 4;
+  repeated string stop = 5;
+  int64 seed = 6;
+}
+
+message InferResponse {
+  string id = 1;
+  string content = 2;
+  repeated ToolCall tool_calls = 3;
+  TokenUsage usage = 4;
+  string finish_reason = 5;
+}
+
+message ToolCall {
+  string id = 1;
+  string name = 2;
+  string arguments = 3;
+}
+
+message TokenUsage {
+  int32 prompt_tokens = 1;
+  int32 completion_tokens = 2;
+  int32 total_tokens = 3;
+}
+
+message HealthRequest {}
+message HealthResponse {
+  bool ready = 1;
+  string version = 2;
+}
+
+message ListModelsRequest {}
+message ListModelsResponse {
+  repeated string models = 1;
+}
+
+message EmbedRequest {
+  string model_name = 1;
+  repeated string texts = 2;
+}
+
+message EmbedResponse {
+  repeated Embedding embeddings = 1;
+}
+
+message Embedding {
+  repeated float values = 1;
+}
