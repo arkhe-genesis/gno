@@ -3,6 +3,10 @@ name = "safe-core"
 version = "0.1.0"
 resolver = "3"
 members = [
+    "crates/safe-core-model-runtime",
+    "crates/safe-core-parallax-bridge",
+    "crates/safe-core-core",
+    "crates/safe-core-policy",
     "crates/*",
 ]
 
@@ -15,11 +19,20 @@ repository = "https://github.com/arkhe-research/safe-core"
 rust-version = "1.85.0"  # MSRV
 
 [workspace.dependencies]
+tonic-build = "0.12"
+prost = "0.13"
+tonic = { version = "0.12", features = ["tls", "tls-roots"] }
+rmcp = { version = "0.1.4", features = ["server", "transport-io"] }
+async-trait = "0.1"
+reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
+hex = "0.4"
+uuid = { version = "1.12", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
 # Criptografia
 blake3 = "1.5"
 sha3 = "0.10"
-kyberlib = "0.1"                    # ML-KEM-768 FIPS 203
-lattice-safe-threshold-ml-dsa = { git = "https://github.com/lattice-safe/threshold-ml-dsa" }
+kyberlib = "0.0.7"                    # ML-KEM-768 FIPS 203
+#lattice-safe-threshold-ml-dsa = { git = "https://github.com/lattice-safe/threshold-ml-dsa" }
 
 # Serialização
 serde = { version = "1.0", features = ["derive"] }

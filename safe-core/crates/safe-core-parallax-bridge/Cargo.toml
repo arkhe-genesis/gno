@@ -1,0 +1,19 @@
+[package]
+name = "safe-core-parallax-bridge"
+version.workspace = true
+edition.workspace = true
+description = "Cliente gRPC para o scheduler do Parallax (Lattica P2P, SGLang, MLX LM)"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+tokio = { workspace = true }
+async-trait = "0.1"
+tonic = { version = "0.12", features = ["tls", "tls-roots"] }
+prost = "0.13"
+uuid = { workspace = true }
+
+[build-dependencies]
+tonic-build = "0.12"

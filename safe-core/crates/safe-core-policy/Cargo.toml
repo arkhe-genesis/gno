@@ -1,0 +1,9 @@
+[package]
+name = "safe-core-policy"
+version.workspace = true
+edition.workspace = true
+[dependencies]
+safe-core-core = { path = "../safe-core-core" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }

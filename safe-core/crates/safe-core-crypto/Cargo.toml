@@ -7,4 +7,4 @@ authors = ["Arkhe(n) Research Group"]
 [dependencies]
 blake3 = { workspace = true }
 kyberlib = { workspace = true }
-lattice-safe-threshold-ml-dsa = { workspace = true }
+#lattice-safe-threshold-ml-dsa = { workspace = true }

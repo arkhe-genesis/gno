@@ -1,0 +1,18 @@
+[package]
+name = "safe-core-model-runtime"
+version.workspace = true
+edition.workspace = true
+description = "Unified model runtime (PyTorch, Candle, Parallax) with Convenção X"
+
+[dependencies]
+safe-core-core = { path = "../safe-core-core" }
+safe-core-policy = { path = "../safe-core-policy" }
+safe-core-parallax-bridge = { path = "../safe-core-parallax-bridge" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+async-trait = "0.1"
+thiserror = { workspace = true }
+tracing = { workspace = true }
+tokio = { workspace = true }
+uuid = { workspace = true }
+chrono = { workspace = true }
