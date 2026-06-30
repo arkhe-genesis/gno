@@ -7,6 +7,13 @@ members = [
     "crates/safe-core-parallax-bridge",
     "crates/safe-core-core",
     "crates/safe-core-policy",
+    "crates/safe-core-dyn-signature",
+    "crates/safe-core-hash-blake3",
+    "crates/safe-core-hw-yubihsm",
+    "crates/safe-core-merkle-evaluation",
+    "crates/safe-core-persistence-rocksdb",
+    "crates/safe-core-reactive-governance",
+    "crates/safe-core-tpm-bridge",
     "crates/*",
 ]
 

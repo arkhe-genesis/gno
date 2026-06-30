@@ -1,0 +1,16 @@
+[package]
+name = "safe-core-tpm-bridge"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = []
+tss-esapi = ["dep:tss-esapi"]
+
+[dependencies]
+tss-esapi = { version = "7.5", optional = true }
+thiserror = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+
+[dev-dependencies]
+hex = "0.4"

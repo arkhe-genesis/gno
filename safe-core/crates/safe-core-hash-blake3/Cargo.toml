@@ -1,0 +1,17 @@
+[package]
+name = "safe-core-hash-blake3"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = ["blake3"]
+blake3 = ["dep:blake3"]
+sha2-fallback = ["dep:sha2"]
+
+[dependencies]
+blake3 = { version = "1.5", optional = true }
+sha2 = { version = "0.10", optional = true }
+thiserror = "1.0"
+
+[dev-dependencies]
+hex = "0.4"
