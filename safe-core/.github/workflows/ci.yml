@@ -15,9 +15,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup Rust
-      uses: dtolnay/rust-toolchain@nightly
+      uses: dtolnay/rust-toolchain@stable
       with:
-        toolchain: nightly-2026-06-01
         components: rustfmt, clippy
     - name: Build
       run: cargo build --verbose

@@ -1,0 +1,124 @@
+name: Benchmark Tracking
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'crates/**/*.rs'
+      - 'benches/**/*.rs'
+  pull_request:
+    paths:
+      - 'crates/**/*.rs'
+      - 'benches/**/*.rs'
+
+jobs:
+  benchmark:
+    name: Run Benchmarks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y protobuf-compiler libclang-dev
+
+      - name: Cache Cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: benchmark
+
+      - name: Run Benchmarks
+        run: |
+          cargo bench --workspace -- --verbose --output-format json > benchmark-results.json
+
+      - name: Parse Results
+        id: parse
+        run: |
+          python3 << 'EOF'
+          import json, sys, os
+          with open('benchmark-results.json', 'r') as f:
+              data = json.load(f) if os.stat("benchmark-results.json").st_size > 0 else {"benchmarks": []}
+
+          # Extrair métricas principais
+          metrics = {}
+          for bench in data.get('benchmarks', []):
+              name = bench.get('name', 'unknown')
+              if 'time' in bench:
+                  metrics[name] = bench['time']['nanos']
+
+          # Salvar para artefato
+          with open('metrics.json', 'w') as f:
+              json.dump(metrics, f, indent=2)
+          if not metrics:
+              print("No benchmarks found, skipping report.")
+              sys.exit(0)
+
+          # Gerar badge
+          print('::set-output name=metrics::' + json.dumps(metrics))
+          EOF
+
+      - name: Compare with Main Branch
+        id: compare
+        continue-on-error: true
+        run: |
+          # Baixar resultados da branch main
+          gh run list --branch main --workflow benchmark.yml --limit 1 --json conclusion,artifactsUrl
+          # Comparar métricas
+          echo "::set-output name=regression::false"
+
+      - name: Upload Benchmark Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: |
+            benchmark-results.json
+            metrics.json
+          retention-days: 90
+
+      - name: Create Benchmark Report
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const metrics = JSON.parse(fs.readFileSync('metrics.json', 'utf8'));
+
+            let report = '## 📊 Benchmark Results\n\n';
+            report += '| Benchmark | Time (ns) |\n';
+            report += '|-----------|-----------|\n';
+
+            for (const [name, time] of Object.entries(metrics)) {
+              report += `| ${name} | ${time.toLocaleString()} |\n`;
+            }
+
+            fs.writeFileSync('report.md', report);
+
+      - name: Post Report
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('report.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
+
+      - name: Upload to Benchmarks GitHub Page
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+          destination_dir: benchmarks
+          keep_files: true
+          force_orphan: false

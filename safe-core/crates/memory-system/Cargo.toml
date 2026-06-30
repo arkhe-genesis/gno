@@ -1,0 +1,12 @@
+[package]
+name = "safe-core-memory-system"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+qdrant-client = "1.18"
+tokio = { workspace = true }
+safe-core-hw-backends = { path = "../hw-backends" }
+
+[dev-dependencies]
+testcontainers = "0.14"
