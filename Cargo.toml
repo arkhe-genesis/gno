@@ -13,7 +13,8 @@ members = [
     "crates/cathedral-benchmarks",
     "crates/cathedral-tests",
     "crates/cathedral-taproot-bridge",
-    "crates/cathedral-agents"
+    "crates/cathedral-agents",
+    "crates/safe-core-fhe"
 ]
 resolver = "2"
 

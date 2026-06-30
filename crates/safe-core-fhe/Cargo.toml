@@ -1,0 +1,30 @@
+[package]
+name = "safe-core-fhe"
+version = "0.11.0-alpha"
+edition = "2021"
+
+[dependencies]
+# TFHE-rs 0.11 — API estável (junho 2026)
+tfhe = { version = "0.11", features = ["integer", "boolean"] }
+
+# Serialização para IPC com sandbox
+bincode = "1.3"
+serde = { version = "1.0", features = ["derive"] }
+
+# Hashing e zeroização
+sha2 = "0.10"
+zeroize = { version = "1.8", features = ["derive"] }
+
+# Geração de IDs
+getrandom = "0.2"
+
+# Erros
+thiserror = "2.0"
+
+[dev-dependencies]
+criterion = "0.5"
+rand = "0.8"
+
+[[bench]]
+name = "fhe_benchmark"
+harness = false
