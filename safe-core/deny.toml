@@ -1,21 +1,65 @@
 [advisories]
+db-path = "~/.cargo/advisory-db"
+db-urls = ["https://github.com/rustsec/advisory-db"]
 vulnerability = "deny"
-unmaintained = "deny"
+unmaintained = "warn"
+yanked = "warn"
 notice = "warn"
-ignore = [
-    # IDs de vulnerabilidades conhecidas que foram verificadas
-    # e não afetam o Safe-Core
-]
 
 [licenses]
 unlicensed = "deny"
+allow-osi-fsf-free = "either"
+copyleft = "warn"
 allow = [
     "MIT",
     "Apache-2.0",
+    "BSD-2-Clause",
     "BSD-3-Clause",
     "ISC",
+    "Zlib",
+    "MPL-2.0",
+    "Unicode-DFS-2016",
 ]
-default = "deny"
+
+[[licenses.clarify]]
+name = "ring"
+expression = "MIT AND ISC AND OpenSSL"
+license-files = [
+    { path = "LICENSE", hash = 0xbd0eed23 }
+]
+
+[[licenses.clarify]]
+name = "webpki"
+expression = "ISC"
+license-files = [
+    { path = "LICENSE", hash = 0x001c7e6c }
+]
 
 [bans]
 multiple-versions = "warn"
+wildcards = "deny"
+highlight = "all"
+
+[[bans.deny]]
+name = "openssl"
+wrappers = ["native-tls"]
+
+[[bans.deny]]
+name = "rust-crypto"
+
+[[bans.skip]]
+name = "winapi"
+
+[[bans.skip]]
+name = "syn"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = [
+    "https://github.com/arkhe-research/safe-core",
+]
+
+[sources.allow-org]
+github = ["arkhe-research"]

@@ -1,0 +1,55 @@
+safe-core-kernel:
+  - changed-files:
+      - any-glob-to-any-file: 'crates/kernel/**/*'
+
+safe-core-sandbox:
+  - changed-files:
+      - any-glob-to-any-file: 'crates/sandbox-bridge/**/*'
+
+safe-core-mcp:
+  - changed-files:
+      - any-glob-to-any-file: 'crates/mcp/**/*'
+
+safe-core-memory:
+  - changed-files:
+      - any-glob-to-any-file: 'crates/memory-system/**/*'
+
+safe-core-governance:
+  - changed-files:
+      - any-glob-to-any-file: 'crates/governance/**/*'
+
+safe-core-crypto:
+  - changed-files:
+      - any-glob-to-any-file: 'crates/crypto-multi-algo/**/*'
+
+cli:
+  - changed-files:
+      - any-glob-to-any-file: 'crates/cli/**/*'
+
+tui:
+  - changed-files:
+      - any-glob-to-any-file: 'crates/tui/**/*'
+
+web-gui:
+  - changed-files:
+      - any-glob-to-any-file: 'crates/web-gui/**/*'
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: '.github/workflows/**/*'
+      - any-glob-to-any-file: 'deny.toml'
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: '**/*.md'
+      - any-glob-to-any-file: 'docs/**/*'
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file: '**/Cargo.toml'
+      - any-glob-to-any-file: '**/Cargo.lock'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file: '**/tests/**/*'
+      - any-glob-to-any-file: '**/benches/**/*'
