@@ -1,0 +1,27 @@
+[package]
+name = "safe-core-dyn-signature"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = ["p256", "ed25519"]
+p256 = ["dep:p256", "dep:ecdsa", "dep:elliptic-curve"]
+ed25519 = ["dep:ed25519-dalek"]
+
+[dependencies]
+# P-256 (NIST curve)
+p256 = { version = "0.13", optional = true, features = ["ecdsa", "pem", "serde"] }
+ecdsa = { version = "0.16", optional = true, features = ["serde"] }
+elliptic-curve = { version = "0.13", optional = true, features = ["pkcs8", "serde"] }
+
+# Ed25519
+ed25519-dalek = { version = "2.1", optional = true, features = ["rand_core", "serde"] }
+
+# Shared
+rand = "0.8"
+thiserror = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+zeroize = { version = "1.8", features = ["derive"] }
+
+[dev-dependencies]
+hex = "0.4"

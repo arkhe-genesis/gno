@@ -1,0 +1,32 @@
+[package]
+name = "safe-core-reactive-governance"
+version = "0.1.0"
+edition = "2021"
+authors = ["Arkhe Research Group"]
+description = "Reactive governance layer for Dark Bio + AGISAFE: signed governance actions, watchdog, and integration with UED & Sparse-Dense."
+
+[dependencies]
+# Workspace internals
+crypto = { path = "../safe-core-dyn-signature", package = "safe-core-dyn-signature" }
+merkle = { path = "../safe-core-merkle-evaluation", package = "safe-core-merkle-evaluation" }
+hsm = { path = "../safe-core-hw-yubihsm", package = "safe-core-hw-yubihsm" }  # ou hsm trait genérico
+
+# External
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+tracing = "0.1"
+chrono = { version = "0.4", features = ["clock"] }
+tokio = { version = "1.43", features = ["full"] }
+prometheus = { version = "0.13", optional = true }   # Para métricas
+metrics = "0.23"
+async-trait = "0.1"
+hex = "0.4"
+
+[dev-dependencies]
+tempfile = "3.14"
+rand = "0.8"
+
+[features]
+default = ["watchdog"]
+watchdog = ["dep:prometheus"]
