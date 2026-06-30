@@ -1,0 +1,68 @@
+name: PR Labeler
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  label:
+    name: Auto-Label PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Label by Size
+        uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+
+      - name: Add Size Label
+        uses: pascalgn/size-label-action@v0.5.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          sizes: >
+            {
+              "0": "size/XS",
+              "10": "size/S",
+              "30": "size/M",
+              "100": "size/L",
+              "500": "size/XL",
+              "1000": "size/XXL"
+            }
+
+      - name: Check for Breaking Changes
+        id: breaking
+        run: |
+          if grep -q "BREAKING CHANGE:" <<< "${{ github.event.pull_request.body }}"; then
+            echo "breaking=true" >> $GITHUB_OUTPUT
+          else
+            echo "breaking=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Add Breaking Change Label
+        if: steps.breaking.outputs.breaking == 'true'
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: breaking-change
+
+      - name: Check for Security Fixes
+        id: security
+        run: |
+          if grep -qi "security\|cve\|vulnerability" <<< "${{ github.event.pull_request.body }}"; then
+            echo "security=true" >> $GITHUB_OUTPUT
+          else
+            echo "security=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Add Security Label
+        if: steps.security.outputs.security == 'true'
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: security

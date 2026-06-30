@@ -1,0 +1,28 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  integration-tests:
+    name: Integration Tests (Qdrant)
+    runs-on: ubuntu-latest
+    services:
+      docker:
+        image: docker:20.10-dind
+        options: --privileged
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y protobuf-compiler libclang-dev
+      - name: Run Integration Tests
+        run: cargo test --workspace --test '*' -- --ignored
+        env:
+          QDRANT_INTEGRATION_TESTS: 1

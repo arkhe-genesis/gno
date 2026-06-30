@@ -1,0 +1,99 @@
+name: Nightly Build
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Todos os dias à meia-noite UTC
+  workflow_dispatch:     # Execução manual também
+
+jobs:
+  nightly-build:
+    name: Nightly Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            protobuf-compiler libclang-dev llvm-dev cmake pkg-config \
+            libssl-dev libopenblas-dev liblapack-dev
+
+      - name: Cache Cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: nightly-build
+
+      - name: Build Release
+        run: cargo build --release --workspace
+
+      - name: Run All Tests (incl. integration)
+        run: cargo test --workspace --all-targets -- --nocapture 2>&1 | tee tests-output.txt
+        env:
+          QDRANT_URL: http://localhost:6334
+          SAFE_CORE_INTEGRATION: 1
+
+      - name: Run Benchmarks
+        run: cargo bench --workspace 2>&1 | tee bench-output.txt
+
+      - name: Generate Coverage
+        run: |
+          cargo install cargo-tarpaulin
+          cargo tarpaulin --workspace --all-features --out xml
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./tarpaulin-report.xml
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload Nightly Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-build-${{ github.sha }}
+          path: |
+            target/release/safe-core
+            target/release/safe-core-tui
+            target/release/safe-core-web
+            tarpaulin-report.xml
+          retention-days: 14
+
+      - name: Generate Report
+        id: report
+        run: |
+          echo "## 📊 Nightly Build Report" >> report.md
+          echo "" >> report.md
+          echo "**Date:** $(date -u)" >> report.md
+          echo "**Commit:** \`${{ github.sha }}\`" >> report.md
+          echo "" >> report.md
+          echo "### Test Results" >> report.md
+          echo "\`\`\`" >> report.md
+          cat tests-output.txt | head -50 >> report.md
+          echo "\`\`\`" >> report.md
+          echo "" >> report.md
+          echo "### Benchmark Results" >> report.md
+          echo "\`\`\`" >> report.md
+          cat bench-output.txt | head -50 >> report.md
+          echo "\`\`\`" >> report.md
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-report
+          path: report.md
+          retention-days: 30
+
+      - name: Notify on Failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          channel-id: '#ci-alerts'
+          slack-message: "❌ Nightly build failed! <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_TOKEN }}
