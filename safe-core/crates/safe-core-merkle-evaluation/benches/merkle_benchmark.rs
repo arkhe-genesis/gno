@@ -35,7 +35,7 @@ fn build_tree_benchmark(c: &mut Criterion) {
 
     for size in [100, 1000, 10000].iter() {
         let leaves: Vec<[u8; 32]> = (0..*size)
-            .map(|i| {
+            .map(|i: usize| {
                 let mut hasher = Sha256::new();
                 hasher.update(&i.to_le_bytes());
                 let mut hash = [0u8; 32];
@@ -58,7 +58,7 @@ fn build_tree_benchmark(c: &mut Criterion) {
 fn proof_benchmark(c: &mut Criterion) {
     let mut group = c.benchmark_group("merkle_proof");
     let leaves: Vec<[u8; 32]> = (0..1000)
-        .map(|i| {
+        .map(|i: usize| {
             let mut hasher = Sha256::new();
             hasher.update(&i.to_le_bytes());
             let mut hash = [0u8; 32];
@@ -84,7 +84,7 @@ fn proof_benchmark(c: &mut Criterion) {
 
         b.iter(|| {
             let result = proof.verify(
-                tree.root(),
+                tree.root().unwrap(),
                 &indices_to_prove,
                 &leaves_to_prove,
                 leaves.len(),
