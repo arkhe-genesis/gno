@@ -1,79 +1,63 @@
-":receipt:  package/realm":
-  - changed-files:
-      - any-glob-to-any-file:
-          - examples/**/*
+# .github/labeler.yml
 
-":package: :robot: gnovm":
+# Crates específicos
+safe-core-kernel:
   - changed-files:
-      - any-glob-to-any-file:
-          - gnovm/**/*
+      - any-glob-to-any-file: 'crates/kernel/**/*'
 
-":package: :globe_with_meridians:  tendermint v2":
+safe-core-sandbox:
   - changed-files:
-      - any-glob-to-any-file:
-          - tm2/**/*
+      - any-glob-to-any-file: 'crates/sandbox-bridge/**/*'
 
-":package: :mountain:  gno.land":
+safe-core-mcp:
   - changed-files:
-      - any-glob-to-any-file:
-          - "gno.land/**/*"
+      - any-glob-to-any-file: 'crates/mcp/**/*'
 
-":book:  documentation":
+safe-core-memory:
   - changed-files:
-      - any-glob-to-any-file:
-          - docs/**/*
+      - any-glob-to-any-file: 'crates/memory-system/**/*'
 
-"amino":
+safe-core-governance:
   - changed-files:
-      - any-glob-to-any-file:
-          - tm2/pkg/amino/**/*
+      - any-glob-to-any-file: 'crates/governance/**/*'
 
-"🌍 gnoweb":
+safe-core-crypto:
   - changed-files:
-      - any-glob-to-any-file:
-          - gno.land/pkg/gnoweb/**/*
+      - any-glob-to-any-file: 'crates/crypto-multi-algo/**/*'
 
-"🛠️ gnodev":
+# Interfaces
+cli:
   - changed-files:
-      - any-glob-to-any-file:
-          - contribs/gnodev/**/*
+      - any-glob-to-any-file: 'crates/cli/**/*'
 
-"📄 top-level-md":
+tui:
   - changed-files:
-      - any-glob-to-any-file:
-          - "*.md"
-          - "README*"
-          - "CHANGELOG*"
-          - "LICENSE*"
+      - any-glob-to-any-file: 'crates/tui/**/*'
 
-"🤝 contribs":
-  - all:
-      - changed-files:
-          - all-globs-to-any-file:
-              - contribs/**/*
-          - all-globs-to-all-files:
-              - "!contribs/gnodev/**/*"
-
-"🚀 ci":
+web-gui:
   - changed-files:
-      - any-glob-to-any-file:
-          - ".github/**/*"
-          - ".codecov.yml"
+      - any-glob-to-any-file: 'crates/web-gui/**/*'
 
-"🐳 devops":
+# CI/CD
+ci:
   - changed-files:
-      - any-glob-to-any-file:
-          - "Dockerfile*"
-          - "misc/deployments/**/*"
-          - "misc/loop/**/*"
-          - "docker-compose*.yml"
-          - "*.dockerfile"
-          - "Makefile"
+      - any-glob-to-any-file: '.github/workflows/**/*'
+      - any-glob-to-any-file: 'deny.toml'
 
-"🐹 golang":
+# Documentação
+documentation:
   - changed-files:
-      - any-glob-to-any-file:
-          - "**/go.mod"
-          - "**/go.sum"
-          - ".go-version"
-          - "go.work*"
+      - any-glob-to-any-file: '**/*.md'
+      - any-glob-to-any-file: 'docs/**/*'
+
+# Dependências
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file: '**/Cargo.toml'
+      - any-glob-to-any-file: '**/Cargo.lock'
+
+# Testes
+tests:
+  - changed-files:
+      - any-glob-to-any-file: '**/tests/**/*'
+      - any-glob-to-any-file: '**/benches/**/*'

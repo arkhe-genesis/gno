@@ -1,0 +1,38 @@
+name: AI Code Reviewer
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+
+jobs:
+  review:
+    name: AI Code Review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    if: |
+      github.event.pull_request.draft == false &&
+      !contains(github.event.pull_request.labels.*.name, 'skip-review')
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Review with AI
+        uses: yetone/openai-reviewer@v1
+        with:
+          model: gpt-4o
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          system-prompt: |
+            You are a senior Rust architect reviewing the Safe-Core AGI codebase.
+            Focus on:
+            1. Security (sandboxing, credential handling, memory safety)
+            2. Performance (async, allocations, hot paths)
+            3. Maintainability (idiomatic Rust, error handling)
+            4. Documentation (public API docs, safety comments)
+            Be constructive and specific. Reference the CAIS security model when relevant.
+          max-comments: 15
+          min-score: 70
